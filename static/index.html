@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="steel">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-        <title>Bootstrap 101 Template</title>
+        <title>Steel</title>
 
         <!-- Bootstrap -->
         <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -26,7 +26,6 @@
 
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="#">Home</a></li>
                         <li><a href="#">Collaboration Central</a></li>
                         <li><a href="#">Class Wiki</a></li>
                     </ul>
@@ -49,6 +48,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8">
+                    <span ng-controller="homeCtrl">{{ message }}</span>
                     <table class="table">
                         <tr>
                             <td>A</td>
@@ -99,11 +99,15 @@
 
                             <div class="panel-body">
                                 <ul class="list-group">
-                                    <li class="list-group-item">Greeting</li>
-                                    <li class="list-group-item">Install Sublime Text 2</li>
-                                    <li class="list-group-item">How to navigate the terminal</li>
-                                    <li class="list-group-item">Other stuff</li>
+                                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Greeting</li>
+                                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Install Sublime Text 2</li>
+                                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> How to navigate the terminal</li>
+                                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Other stuff</li>
                                 </ul>                           
+                            </div>
+
+                            <div class="panel-footer">
+                                See more...
                             </div>
                         </div>
                     </div>
@@ -113,6 +117,8 @@
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="lib/jquery/dist/jquery.min.js"></script>
+        <script src="lib/angular/angular.js"></script>
+        <script src="js/main.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
     </body>
