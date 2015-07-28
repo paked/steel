@@ -3,7 +3,8 @@ var app = angular.module('steel', ['ngRoute']);
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/assignments', {
-            templateUrl: 'templates/assignments.html'
+            templateUrl: 'templates/assignments.html',
+            controller: 'AssignmentsCtrl'
         }).
         when('/', {
             templateUrl: 'templates/feed.html',
@@ -12,6 +13,10 @@ app.config(['$routeProvider', function($routeProvider) {
         otherwise({
             redirectTo: '/'
         });
+}]);
+
+app.controller('AssignmentsCtrl', ['$scope', '$http', function($scope, $http) {
+
 }]);
 
 app.controller('FeedCtrl', ['$scope', '$http', function($scope, $http) {
