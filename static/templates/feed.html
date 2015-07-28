@@ -1,0 +1,60 @@
+<div class="row">
+    <div class="col-md-8">
+        <h3>Greg's Programming School - 30 Students</h3>
+        <br>
+        <table class="table">
+            <tr ng-repeat="update in feedUpdates" ng-switch="update.type">
+                <td ng-switch-when="assignment">A</td>
+                <td ng-switch-when="feedback">F</td>
+                <td ng-switch-when="like">L</td>
+                <td ng-switch-when="request">R</td>
+                <td ng-switch-default>?</td>
+
+                <td>{{ update.message }}</td>
+
+                <td>{{ update.time }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-md-4">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Due This Week</h3>
+                </div>
+
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><i class="glyphicon glyphicon-remove"></i> Funny Strings</li>
+                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Reverse String</li>
+                        <li class="list-group-item"><i class="glyphicon glyphicon-remove"></i> Hacky hack</li>
+                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Hello, World</li>
+                    </ul>                           
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Tasks</h3>
+                </div>
+
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Greeting</li>
+                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Install Sublime Text 2</li>
+                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> How to navigate the terminal</li>
+                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Other stuff</li>
+                    </ul>                           
+                </div>
+
+                <div class="panel-footer">
+                    See more...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

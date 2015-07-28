@@ -17,8 +17,9 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
     </head>
+
     <body>
-        <nav class="navbar navbar-default">
+        <nav class="navbar navbar-default navbar-static-top">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a href="#" class="navbar-brand">Steel</a>
@@ -28,6 +29,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="#">Collaboration Central</a></li>
                         <li><a href="#">Class Wiki</a></li>
+                        <li><a href="#">Marks</a></li>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
@@ -45,79 +47,13 @@
             </div>
         </nav>
 
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-8">
-                    <span ng-controller="homeCtrl">{{ message }}</span>
-                    <table class="table">
-                        <tr>
-                            <td>A</td>
-                            <td>Greg posted a new assignment</td>
-                            <td>20 minutes ago...</td>
-                        </tr>
-                        <tr>
-                            <td>L</td>
-                            <td>Jimmy liked your solution to the "funny string" task</td>
-                            <td>5 hours ago...</td>
-                        </tr>
-                        <tr>
-                            <td>F</td>
-                            <td>Greg gave feedback on your "doomsday" assignment</td>
-                            <td>10 hours ago...</td>
-                        </tr>
-                        <tr>
-                            <td>W</td>
-                            <td>James added a new page to the wiki</td>
-                            <td>40 hours ago...</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Due This Week</h3>
-                            </div>
-
-                            <div class="panel-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item"><i class="glyphicon glyphicon-remove"></i> Funny Strings</li>
-                                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Reverse String</li>
-                                    <li class="list-group-item"><i class="glyphicon glyphicon-remove"></i> Hacky hack</li>
-                                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Hello, World</li>
-                                </ul>                           
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Tasks</h3>
-                            </div>
-
-                            <div class="panel-body">
-                                <ul class="list-group">
-                                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Greeting</li>
-                                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Install Sublime Text 2</li>
-                                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> How to navigate the terminal</li>
-                                    <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Other stuff</li>
-                                </ul>                           
-                            </div>
-
-                            <div class="panel-footer">
-                                See more...
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="container-fluid" ng-view>
         </div>
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="lib/jquery/dist/jquery.min.js"></script>
         <script src="lib/angular/angular.js"></script>
+        <script src="lib/angular-route/angular-route.js"></script>
         <script src="js/main.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
