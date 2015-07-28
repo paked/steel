@@ -25,12 +25,9 @@
                 </div>
 
                 <div class="panel-body">
-                    <ul class="list-group">
-                        <li class="list-group-item"><i class="glyphicon glyphicon-remove"></i> Funny Strings</li>
-                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Reverse String</li>
-                        <li class="list-group-item"><i class="glyphicon glyphicon-remove"></i> Hacky hack</li>
-                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Hello, World</li>
-                    </ul>                           
+                    <div class="list-group">
+                        <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/tasks/{{task.id}}"> <i ng-class="{'glyphicon-remove': !task.done, 'glyphicon-ok': task.done}" class="glyphicon"></i> {{ task.name }}</a>
+                    </div>                           
                 </div>
             </div>
         </div>
