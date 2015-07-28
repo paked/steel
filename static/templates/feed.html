@@ -40,10 +40,8 @@
 
                 <div class="panel-body">
                     <ul class="list-group">
-                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Greeting</li>
-                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Install Sublime Text 2</li>
-                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> How to navigate the terminal</li>
-                        <li class="list-group-item"><i class="glyphicon glyphicon-ok"></i> Other stuff</li>
+
+                        <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/tasks/{{task.id}}"> <i ng-class="{'glyphicon-remove': !task.done, 'glyphicon-ok': task.done}" class="glyphicon"></i> {{ task.name }}</a>
                     </ul>                           
                 </div>
 
