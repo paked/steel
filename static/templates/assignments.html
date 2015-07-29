@@ -9,8 +9,13 @@
     </div>
     <div class="col-md-8">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <h2 class="panel-title">{{ selected.name }}<small class="pull-right">{{ selected.time }}</small></h2>
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title">{{ selected.name }}</small>
+                    <div class="button-group pull-right">
+                        <a href="#/" class="btn btn-default" style="margin-right: 1vw;">Project Page</a>
+                        <small>{{ selected.time }}</small>
+                    </div>
+                </h3>
             </div>
 
             <div class="panel-body">
@@ -34,6 +39,7 @@
                                 <button class="btn btn-default" type="button">Add</button>
                             </span>
                             <input type="text" class="form-control" placeholder="@username or email">
+
                         </div>
                     </div>
 
