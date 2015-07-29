@@ -16,7 +16,36 @@ app.config(['$routeProvider', function($routeProvider) {
 }]);
 
 app.controller('AssignmentsCtrl', ['$scope', '$http', function($scope, $http) {
-
+    $scope.tasks = [
+        {
+            "name": "Funny Strings",
+            "description": "If the reverse of a character (a = z, b = y, c = x, etc.) is opposite iteself lorem ipsum xyz",
+            "id": 1,
+            "done": false,
+            "time": "Due in 3 days"
+        },
+        {
+            "name": "Reverse String",
+            "description": "Given a string, how would you reverse it... quickly and easily",
+            "id": 2,
+            "done": false,
+            "time": "Due in 3 days"
+        },
+        {
+            "name": "Utopian Tree",
+            "description": "Given a spec for a program, implement it using your knowledge of control structures",
+            "id": 3,
+            "done": true,
+            "time": "Due in 4 days"
+        },
+        {
+            "name": "Print",
+            "description": "Make a few words appear in your terminal",
+            "id": 4,
+            "done": true,
+            "time": "Due in 10 days"
+        }
+    ];
 }]);
 
 app.controller('FeedCtrl', ['$scope', '$http', function($scope, $http) {

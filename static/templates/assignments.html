@@ -1,30 +1,64 @@
 <div class="row">
     <div class="col-md-4">
         <div class="list-group">
-            <a class="list-group-item" href="#">
-                <h4>Funny Strings <small class="pull-right">Due in x days</small></h4>
-                <p>If the reverse of a character (a = z, b = y, c = x, etc.) is opposite iteself...</p>
+            <a ng-repeat="task in tasks" class="list-group-item" href="#/assignments">
+                <h4>{{ task.name }}<small class="pull-right">{{ task.time }}</small></h4>
+                <p>{{ task.description }}</p>
             </a>
         </div>
     </div>
     <div class="col-md-8">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h2 class="panel-title">Title of the task <small class="pull-right">Due in x days</small></h2>
+                <h2 class="panel-title">Funny Strings<small class="pull-right">Due in 3 days</small></h2>
             </div>
 
             <div class="panel-body">
                 <p>If the reverse of a character (a = z, b = y, c = x, etc.) is opposite iteself lorem ipsum xyz</p>
+                <hr>
                 
-                <p>perty pictures</p>
-                <p>If it is a team assignment, assemble your team</p>
-                <p>Another description here</p>
-                <p>Sample file stuff</p>
-                <p>Open in your sandbox</p>
-                <p>Relevant links</p>
-            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Your Team</h4>
+                        <ul>
+                            <li>James</li>
+                            <li>Jimmy</li>
+                            <li>Whales</li>
+                        </ul>
+
+                        <div class="input-group"> 
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">Add</button>
+                            </span>
+                            <input type="text" class="form-control" placeholder="@username or email">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4>Sandbox Options</h4>
+                        <p>The sandbox is a place where you can freely run and hack on your code. Code here will be ran against the tests provided by your teacher.</p>
+                        <button class="btn btn-primary">Open in sandbox</button>
+                        <button class="btn btn-default">Open locally</button>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li>ASCII Table</li>
+                            <li>String manipulation</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4>Pictures?</h4>
+                        <p>Something should go here to yeah xyz have fun kids</p>
+                    </div>
+                </div>
+           </div>
         </div>
     </div>
-
-
 </div>
