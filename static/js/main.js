@@ -6,6 +6,10 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/assignments.html',
             controller: 'AssignmentsCtrl'
         }).
+        when('/assignments/:id/:team', {
+            templateUrl: 'templates/personal_assignment.html',
+            controller: 'PersonalAssignmentCtrl'
+        }).
         when('/', {
             templateUrl: 'templates/feed.html',
             controller: 'FeedCtrl'
@@ -13,6 +17,10 @@ app.config(['$routeProvider', function($routeProvider) {
         otherwise({
             redirectTo: '/'
         });
+}]);
+
+app.controller('PersonalAssignmentCtrl', ['$scope', '$http', function($scope, $http) {
+
 }]);
 
 app.controller('AssignmentsCtrl', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
