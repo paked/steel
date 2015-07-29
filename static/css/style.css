@@ -1,0 +1,19 @@
+/*
+ * Dots are used on the personal assignment page to visually show if 
+ * the tests were succesful or not.
+ *
+ * TODO: find nicer colours
+ */
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+}
+
+.dot-red {
+    background-color: red;
+}
+
+.dot-green {
+    background-color: green;
+}
