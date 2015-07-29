@@ -16,7 +16,7 @@ app.config(['$routeProvider', function($routeProvider) {
 }]);
 
 app.controller('AssignmentsCtrl', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
-    var index = parseInt($routeParams.id) || 0;
+    var index = parseInt($routeParams.id) || 1;
 
     $scope.tasks = [
         {
