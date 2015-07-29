@@ -2,7 +2,7 @@ var app = angular.module('steel', ['ngRoute']);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
-        when('/assignments', {
+        when('/assignments/:id?', {
             templateUrl: 'templates/assignments.html',
             controller: 'AssignmentsCtrl'
         }).
@@ -15,7 +15,9 @@ app.config(['$routeProvider', function($routeProvider) {
         });
 }]);
 
-app.controller('AssignmentsCtrl', ['$scope', '$http', function($scope, $http) {
+app.controller('AssignmentsCtrl', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+    var index = parseInt($routeParams.id) || 0;
+
     $scope.tasks = [
         {
             "name": "Funny Strings",
@@ -46,6 +48,8 @@ app.controller('AssignmentsCtrl', ['$scope', '$http', function($scope, $http) {
             "time": "Due in 10 days"
         }
     ];
+
+    $scope.selected = $scope.tasks[index - 1];
 }]);
 
 app.controller('FeedCtrl', ['$scope', '$http', function($scope, $http) {
