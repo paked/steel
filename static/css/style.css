@@ -17,3 +17,11 @@
 .dot-green {
     background-color: green;
 }
+
+/*
+ * This is a fix for the small text in the personal assignment page
+ * showing the due date.
+ */
+.active > h4 > small {
+    color: white;
+}
