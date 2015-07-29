@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-4">
         <div class="list-group">
-            <a ng-repeat="task in tasks" class="list-group-item" ng-href="#/assignments/{{ task.id }}">
+            <a ng-repeat="task in tasks" class="list-group-item" ng-class="{active: task.id == selected.id}" ng-href="#/assignments/{{ task.id }}">
                 <h4>{{ task.name }}<small class="pull-right">{{ task.time }}</small></h4>
                 <p>{{ task.description }}</p>
             </a>
