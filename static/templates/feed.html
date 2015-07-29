@@ -24,11 +24,9 @@
                     <h3 class="panel-title">Due This Week</h3>
                 </div>
 
-                <div class="panel-body">
-                    <div class="list-group">
-                        <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/tasks/{{task.id}}"> <i ng-class="{'glyphicon-remove': !task.done, 'glyphicon-ok': task.done}" class="glyphicon"></i> {{ task.name }}</a>
-                    </div>                           
-                </div>
+                <div class="list-group">
+                    <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/tasks/{{task.id}}"> <i ng-class="{'glyphicon-remove': !task.done, 'glyphicon-ok': task.done}" class="glyphicon"></i> {{ task.name }}</a>
+                </div>                           
             </div>
         </div>
 
@@ -38,12 +36,10 @@
                     <h3 class="panel-title">Tasks</h3>
                 </div>
 
-                <div class="panel-body">
-                    <ul class="list-group">
+                <ul class="list-group">
 
-                        <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/tasks/{{task.id}}"> <i ng-class="{'glyphicon-remove': !task.done, 'glyphicon-ok': task.done}" class="glyphicon"></i> {{ task.name }}</a>
-                    </ul>                           
-                </div>
+                    <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/tasks/{{task.id}}"> <i ng-class="{'glyphicon-remove': !task.done, 'glyphicon-ok': task.done}" class="glyphicon"></i> {{ task.name }}</a>
+                </ul>                           
 
                 <div class="panel-footer">
                     See more...
