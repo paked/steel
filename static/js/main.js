@@ -27,8 +27,9 @@ app.controller('SandboxCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.editorOpts = {
         lineWrapping : true,
         lineNumbers: true,
-        theme: '3024-night',
-        mode: 'javascript'
+        theme: 'elegant',
+        mode: 'javascript',
+        value: "// do some magic?"
     };
 }]);
 
