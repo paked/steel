@@ -1,4 +1,4 @@
-var app = angular.module('steel', ['ngRoute']);
+var app = angular.module('steel', ['ngRoute', 'ui.codemirror']);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
@@ -10,6 +10,10 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/personal_assignment.html',
             controller: 'PersonalAssignmentCtrl'
         }).
+        when('/sandbox', {
+            templateUrl: 'templates/sandbox.html',
+            controller: 'SandboxCtrl'
+        }).
         when('/', {
             templateUrl: 'templates/feed.html',
             controller: 'FeedCtrl'
@@ -17,6 +21,15 @@ app.config(['$routeProvider', function($routeProvider) {
         otherwise({
             redirectTo: '/'
         });
+}]);
+
+app.controller('SandboxCtrl', ['$scope', '$http', function($scope, $http) {
+    $scope.editorOpts = {
+        lineWrapping : true,
+        lineNumbers: true,
+        theme: '3024-night',
+        mode: 'javascript'
+    };
 }]);
 
 app.controller('PersonalAssignmentCtrl', ['$scope', '$http', function($scope, $http) {
