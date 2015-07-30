@@ -9,6 +9,7 @@
     "bootstrap": "~3.3.5",
     "angular": "~1.4.3",
     "angular-route": "~1.4.3",
-    "angular-ui-codemirror": "~0.3.0"
+    "angular-ui-codemirror": "~0.3.0",
+    "font-awesome": "~4.4.0"
   }
 }
