@@ -4,10 +4,10 @@
         <br>
         <table class="table">
             <tr ng-repeat="update in feedUpdates" ng-switch="update.type">
-                <td ng-switch-when="assignment">A</td>
-                <td ng-switch-when="feedback">F</td>
-                <td ng-switch-when="like">L</td>
-                <td ng-switch-when="request">R</td>
+                <td ng-switch-when="assignment"><i class="fa fa-tasks"></i></td>
+                <td ng-switch-when="feedback"><i class="fa fa-comment"></i></td>
+                <td ng-switch-when="like"><i class="fa fa-heart"></i></td>
+                <td ng-switch-when="request"><i class="fa fa-envelope"></i></td>
                 <td ng-switch-default>?</td>
 
                 <td>{{ update.message }}</td>
