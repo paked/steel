@@ -19,29 +19,33 @@
 
     <div class="col-md-4">
         <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Due This Week</h3>
-                </div>
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Due This Week</h3>
+                    </div>
 
-                <div class="list-group">
-                    <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
-                </div>                           
+                    <div class="list-group">
+                        <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
+                    </div>                           
+                </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Tasks</h3>
-                </div>
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Tasks</h3>
+                    </div>
 
-                <ul class="list-group">
-                    <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
-                </ul>                           
+                    <ul class="list-group">
+                        <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
+                    </ul>                           
 
-                <div class="panel-footer">
-                    See more...
+                    <div class="panel-footer">
+                        <a href="#/assignments">See more...</a>
+                    </div>
                 </div>
             </div>
         </div>
