@@ -22,12 +22,9 @@ type User struct {
 func RegisterUser(username, password, email string) (User, error) {
 	u := User{}
 
-	if username == "" {
-		return u, errors.New("Not a valid username")
-	}
-
-	if password == "" {
-		return u, errors.New("Not a valid password")
+	err := checkCredentials(username, password)
+	if err != nil {
+		return u, err
 	}
 
 	if email == "" {
@@ -48,7 +45,6 @@ func RegisterUser(username, password, email string) (User, error) {
 	}
 
 	result, err := db.Exec("INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)", u.Username, u.PasswordHash, u.Email)
-
 	if err != nil {
 		return u, err
 	}
@@ -56,4 +52,32 @@ func RegisterUser(username, password, email string) (User, error) {
 	u.ID, err = result.LastInsertId()
 
 	return u, err
+}
+
+func LoginUser(username, password string) (User, error) {
+	u := User{}
+	err := checkCredentials(username, password)
+	if err != nil {
+		return u, err
+	}
+
+	row := db.QueryRow("SELECT username, password_hash, id, email FROM users WHERE username = ? AND password_hash = ?", username, password)
+	err = row.Scan(&u.Username, &u.PasswordHash, &u.ID, &u.Email)
+	if err != nil {
+		return u, err
+	}
+
+	return u, nil
+}
+
+func checkCredentials(username, password string) error {
+	if username == "" {
+		return errors.New("Not a valid username")
+	}
+
+	if password == "" {
+		return errors.New("Not a valid password")
+	}
+
+	return nil
 }
