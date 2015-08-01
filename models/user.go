@@ -63,11 +63,17 @@ func LoginUser(username, password string) (User, error) {
 
 	row := db.QueryRow("SELECT username, password_hash, id, email FROM users WHERE username = ? AND password_hash = ?", username, password)
 	err = row.Scan(&u.Username, &u.PasswordHash, &u.ID, &u.Email)
+
 	if err != nil {
 		return u, err
 	}
 
 	return u, nil
+}
+
+func DeleteUser(username string) error {
+	_, err := db.Exec("DELETE FROM users WHERE username = ?", username)
+	return err
 }
 
 func checkCredentials(username, password string) error {

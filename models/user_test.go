@@ -14,7 +14,7 @@ func TestRegister(t *testing.T) {
 		t.Error("Could not connect to db")
 	}
 
-	if _, err := RegisterUser("paked", "pw", "hat"); err == nil {
+	if _, err := RegisterUser("paked", "pw", "hat"); err != nil {
 		t.Error("Hello")
 	}
 
@@ -36,8 +36,22 @@ func TestLogin(t *testing.T) {
 		t.Error("Could not log in user:", err)
 	}
 
+	if _, err := LoginUser("paked", "notpw"); err == nil {
+		t.Error("Could log in user with wrong password")
+	}
+
 	if _, err := LoginUser("thisuserdoesnotexist", "pass"); err == nil {
 		t.Error("Could login user")
 	}
 
+}
+
+func TestDelete(t *testing.T) {
+	if err := DeleteUser("paked"); err != nil {
+		t.Error("Could not delete paked")
+	}
+
+	if err := DeleteUser("newbie"); err != nil {
+		t.Error("Could not delete paked")
+	}
 }
