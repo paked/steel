@@ -17,5 +17,6 @@ func main() {
 
 	http.Handle("/", r)
 
+	log.Println("Serving on localhost:8080")
 	log.Println(http.ListenAndServe("localhost:8080", nil))
 }
