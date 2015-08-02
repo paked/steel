@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"errors"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -110,6 +111,24 @@ func (u *User) updatePermissions(level int) error {
 	u.Permissions = level
 
 	return nil
+}
+
+func (u *User) CreateAssignment(name, description, explanation string) (Assignment, error) {
+	a := Assignment{
+		Name:        name,
+		Description: description,
+		Explanation: explanation,
+		Due:         time.Now(),
+	}
+
+	result, err := db.Exec("INSERT INTO assignments (name, description, explanation, due, created_by) VALUES (?, ?, ?, ?, ?)", a.Name, a.Description, a.Explanation, a.Due, u.ID)
+	if err != nil {
+		return a, err
+	}
+
+	a.ID, err = result.LastInsertId()
+
+	return a, err
 }
 
 func checkCredentials(username, password string) error {
