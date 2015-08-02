@@ -14,6 +14,12 @@ type Assignment struct {
 	Due         time.Time
 }
 
+type Submission struct {
+	ID       int64
+	Thoughts string
+	TeamName string
+}
+
 func GetAssignment(id int64) (Assignment, error) {
 	a := Assignment{
 		ID: id,
@@ -33,4 +39,15 @@ func GetAssignment(id int64) (Assignment, error) {
 	}
 
 	return a, nil
+}
+
+func GetSubmission(id int64) (Submission, error) {
+	s := Submission{
+		ID: id,
+	}
+
+	row := db.QueryRow("SELECT team_name, thoughts FROM submissions WHERE id = ?", s.ID)
+	err := row.Scan(&s.TeamName, &s.Thoughts)
+
+	return s, err
 }

@@ -131,6 +131,21 @@ func (u *User) CreateAssignment(name, description, explanation string) (Assignme
 	return a, err
 }
 
+func (u *User) StartAssignment(id int64) (Submission, error) {
+	s := Submission{
+		TeamName: u.Username + "'s Assignment",
+	}
+
+	res, err := db.Exec("INSERT INTO submissions (team_name) VALUES (?)", s.TeamName)
+	if err != nil {
+		return s, err
+	}
+
+	s.ID, err = res.LastInsertId()
+
+	return s, err
+}
+
 func checkCredentials(username, password string) error {
 	if username == "" {
 		return errors.New("Not a valid username")

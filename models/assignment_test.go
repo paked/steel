@@ -17,9 +17,22 @@ func TestAssignments(t *testing.T) {
 		panic(err)
 	}
 
-	_, err = u.CreateAssignment("Test", "descritpion", "explanation")
+	a, err := u.CreateAssignment("Test", "descritpion", "explanation")
 	if err != nil {
 		t.Error("Could not create Assignment: ", err)
+	}
+
+	if a.Name != "Test" || a.Description != "descritpion" || a.Explanation != "explanation" {
+		t.Error("Assignment values were not set properly")
+	}
+
+	s, err := u.StartAssignment(a.ID)
+	if err != nil {
+		t.Error("Could not start assignment: ", err)
+	}
+
+	if s.TeamName != u.Username+"'s Assignment" {
+		t.Error("Submission values were not correct")
 	}
 
 	u.Delete()
