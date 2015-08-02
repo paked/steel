@@ -46,12 +46,41 @@ func TestLogin(t *testing.T) {
 
 }
 
+func TestAdmin(t *testing.T) {
+	u, _ := LoginUser("paked", "pw")
+
+	if u.Permissions != DefaultPermissions {
+		t.Error("Wrong default permissions")
+	}
+
+	if u2, _ := LoginUser("paked", "pw"); u2.Permissions != DefaultPermissions {
+		t.Error("Wrong permissions level in DB")
+	}
+
+	err := u.MakeAdmin()
+
+	if err != nil {
+		t.Error("Admin creation error: ", err)
+	}
+
+	if u.Permissions != AdminPermissions {
+		t.Error("Wrong permission level")
+	}
+
+	if u2, _ := LoginUser("paked", "pw"); u2.Permissions != AdminPermissions {
+		t.Error("Wrong permissions level in DB")
+	}
+}
+
 func TestDelete(t *testing.T) {
-	if err := DeleteUser("paked"); err != nil {
+	paked, _ := LoginUser("paked", "pw")
+	newbie, _ := LoginUser("newbie", "pw")
+
+	if err := paked.Delete(); err != nil {
 		t.Error("Could not delete paked")
 	}
 
-	if err := DeleteUser("newbie"); err != nil {
-		t.Error("Could not delete paked")
+	if err := newbie.Delete(); err != nil {
+		t.Error("Could not delete newbie")
 	}
 }

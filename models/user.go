@@ -7,6 +7,12 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+// These should probably go into the DB
+const (
+	DefaultPermissions = iota
+	AdminPermissions
+)
+
 var (
 	db *sql.DB
 )
@@ -17,6 +23,7 @@ type User struct {
 	PasswordHash string
 	Salt         string
 	Email        string
+	Permissions  int
 }
 
 func RegisterUser(username, password, email string) (User, error) {
@@ -61,8 +68,8 @@ func LoginUser(username, password string) (User, error) {
 		return u, err
 	}
 
-	row := db.QueryRow("SELECT username, password_hash, id, email FROM users WHERE username = ? AND password_hash = ?", username, password)
-	err = row.Scan(&u.Username, &u.PasswordHash, &u.ID, &u.Email)
+	row := db.QueryRow("SELECT username, password_hash, id, email, permission_level FROM users WHERE username = ? AND password_hash = ?", username, password)
+	err = row.Scan(&u.Username, &u.PasswordHash, &u.ID, &u.Email, &u.Permissions)
 
 	if err != nil {
 		return u, err
@@ -71,9 +78,38 @@ func LoginUser(username, password string) (User, error) {
 	return u, nil
 }
 
-func DeleteUser(username string) error {
-	_, err := db.Exec("DELETE FROM users WHERE username = ?", username)
+func (u *User) Delete() error {
+	_, err := db.Exec("DELETE FROM users WHERE username = ?", u.Username)
+
 	return err
+}
+
+func (u *User) IsAdmin() bool {
+	if u.Permissions == AdminPermissions {
+		return true
+	}
+
+	return false
+}
+
+func (u *User) MakeAdmin() error {
+	return u.updatePermissions(AdminPermissions)
+}
+
+func (u *User) DemoteAdmin() error {
+	return u.updatePermissions(DefaultPermissions)
+}
+
+func (u *User) updatePermissions(level int) error {
+	_, err := db.Exec("UPDATE users SET permission_level=? WHERE id = ?", level, u.ID)
+
+	if err != nil {
+		return err
+	}
+
+	u.Permissions = level
+
+	return nil
 }
 
 func checkCredentials(username, password string) error {
