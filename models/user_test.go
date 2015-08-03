@@ -21,6 +21,15 @@ func TestRegister(t *testing.T) {
 	if _, err := RegisterUser("newbie", "pw", "mat"); err != nil {
 		t.Error("Could not register user", err)
 	}
+
+	u, err := GetUser("username", "paked")
+	if err != nil {
+		t.Error("Could not get user", err)
+	}
+
+	if u.Username != "paked" || u.PasswordHash != "pw" || u.Email != "hat" {
+		t.Error("invalid data")
+	}
 }
 
 func TestLogin(t *testing.T) {
