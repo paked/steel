@@ -74,21 +74,12 @@ func RegisterUser(username, password, email string) (User, error) {
 	return u, err
 }
 
-func LoginUser(username, password string) (User, error) {
-	u := User{}
-	err := checkCredentials(username, password)
-	if err != nil {
-		return u, err
+func (u *User) Login(password string) (bool, error) {
+	if u.PasswordHash == password {
+		return true, nil
 	}
 
-	row := db.QueryRow("SELECT username, password_hash, id, email, permission_level FROM users WHERE username = ? AND password_hash = ?", username, password)
-	err = row.Scan(&u.Username, &u.PasswordHash, &u.ID, &u.Email, &u.Permissions)
-
-	if err != nil {
-		return u, err
-	}
-
-	return u, nil
+	return false, nil
 }
 
 func (u *User) Delete() error {

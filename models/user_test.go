@@ -41,49 +41,66 @@ func TestLogin(t *testing.T) {
 		t.Error("Could not connect to DB")
 	}
 
-	if _, err := LoginUser("paked", "pw"); err != nil {
+	paked, err := GetUser("username", "paked")
+	newbie, err := GetUser("username", "newbie")
+
+	if ok, err := paked.Login("pw"); err != nil || !ok {
 		t.Error("Could not log in user:", err)
 	}
 
-	if _, err := LoginUser("paked", "notpw"); err == nil {
+	if ok, err := paked.Login("notpw"); err != nil || ok {
 		t.Error("Could log in user with wrong password")
 	}
 
-	if _, err := LoginUser("thisuserdoesnotexist", "pass"); err == nil {
-		t.Error("Could login user")
+	if ok, err := newbie.Login("pw"); err != nil || !ok {
+		t.Error("Could not log in user:", err)
 	}
 
+	if ok, err := newbie.Login("notpw"); err != nil || ok {
+		t.Error("Could log in user with wrong password")
+	}
 }
 
 func TestAdmin(t *testing.T) {
-	u, _ := LoginUser("paked", "pw")
-
+	u, _ := GetUser("username", "paked")
 	if u.Permissions != DefaultPermissions {
-		t.Error("Wrong default permissions")
-	}
-
-	if u2, _ := LoginUser("paked", "pw"); u2.Permissions != DefaultPermissions {
-		t.Error("Wrong permissions level in DB")
+		t.Error("Initial permissions are not default!")
 	}
 
 	err := u.MakeAdmin()
-
 	if err != nil {
-		t.Error("Admin creation error: ", err)
+		t.Error("Error creating admin: ", err)
 	}
 
 	if u.Permissions != AdminPermissions {
-		t.Error("Wrong permission level")
+		t.Error("Local permissions have not been changed")
 	}
 
-	if u2, _ := LoginUser("paked", "pw"); u2.Permissions != AdminPermissions {
-		t.Error("Wrong permissions level in DB")
+	// pull user from database
+	u, _ = GetUser("username", "paked")
+	if u.Permissions != AdminPermissions {
+		t.Error("Wrong permissions in DB")
+	}
+
+	err = u.DemoteAdmin()
+	if err != nil {
+		t.Error("Could not demote admin...", err)
+	}
+
+	if u.Permissions != DefaultPermissions {
+		t.Error("Local changes not made")
+	}
+
+	// pull user from database
+	u, _ = GetUser("username", "paked")
+	if u.Permissions != DefaultPermissions {
+		t.Error("Changes not in DB")
 	}
 }
 
 func TestDelete(t *testing.T) {
-	paked, _ := LoginUser("paked", "pw")
-	newbie, _ := LoginUser("newbie", "pw")
+	paked, _ := GetUser("username", "paked")
+	newbie, _ := GetUser("username", "newbie")
 
 	if err := paked.Delete(); err != nil {
 		t.Error("Could not delete paked")
