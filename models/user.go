@@ -124,7 +124,7 @@ func (u *User) CreateAssignment(name, description, explanation string) (Assignme
 		Due:         time.Now(),
 	}
 
-	result, err := db.Exec("INSERT INTO assignments (name, description, explanation, due, created_by) VALUES (?, ?, ?, ?, ?)", a.Name, a.Description, a.Explanation, a.Due, u.ID)
+	result, err := db.Exec("INSERT INTO assignments (name, description, explanation, due, created_by) VALUES (?, ?, ?, ?, ?)", a.Name, a.Description, a.Explanation, a.Due.Unix(), u.ID)
 	if err != nil {
 		return a, err
 	}

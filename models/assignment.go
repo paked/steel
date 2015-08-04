@@ -25,15 +25,15 @@ func GetAssignment(id int64) (Assignment, error) {
 		ID: id,
 	}
 
-	var timeString string
+	var unixTime int64
 
 	row := db.QueryRow("SELECT name, description, explanation, due FROM assignments WHERE id = ?", a.ID)
-	err := row.Scan(&a.Name, &a.Description, &a.Explanation, &timeString)
+	err := row.Scan(&a.Name, &a.Description, &a.Explanation, &unixTime)
 	if err != nil {
 		return a, err
 	}
 
-	a.Due, err = time.Parse(timeFormat, timeString)
+	a.Due = time.Unix(unixTime, 0)
 	if err != nil {
 		return a, err
 	}
