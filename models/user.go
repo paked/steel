@@ -124,7 +124,7 @@ func (u *User) CreateAssignment(name, description, explanation string) (Assignme
 		Due:         time.Now(),
 	}
 
-	result, err := db.Exec("INSERT INTO assignments (name, description, explanation, due, created_by) VALUES (?, ?, ?, ?, ?)", a.Name, a.Description, a.Explanation, a.Due.Unix(), u.ID)
+	result, err := db.Exec("INSERT INTO assignments (name, description, explanation, due, created_by) VALUES (?, ?, ?, ?, ?)", a.Name, a.Description, a.Explanation, a.Due.UnixNano(), u.ID)
 	if err != nil {
 		return a, err
 	}
@@ -147,6 +147,32 @@ func (u *User) StartAssignment(id int64) (Submission, error) {
 	s.ID, err = res.LastInsertId()
 
 	return s, err
+}
+
+func (u *User) DueAssignments(before time.Time) ([]Assignment, error) {
+	var as []Assignment
+	rows, err := db.Query("SELECT id, name, description, explanation, due FROM assignments WHERE due < ?", before.Unix())
+	if err != nil {
+		return as, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		a := Assignment{}
+		var unixTime int64
+
+		err := rows.Scan(&a.ID, &a.Name, &a.Description, &a.Explanation, &unixTime)
+		if err != nil {
+			return as, err
+		}
+
+		a.Due = time.Unix(unixTime, 0)
+
+		as = append(as, a)
+	}
+
+	return as, nil
 }
 
 func checkCredentials(username, password string) error {

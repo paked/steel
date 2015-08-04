@@ -33,7 +33,7 @@ func GetAssignment(id int64) (Assignment, error) {
 		return a, err
 	}
 
-	a.Due = time.Unix(unixTime, 0)
+	a.Due = time.Unix(0, unixTime)
 	if err != nil {
 		return a, err
 	}

@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"testing"
+	"time"
 )
 
 func TestAssignments(t *testing.T) {
@@ -36,4 +37,25 @@ func TestAssignments(t *testing.T) {
 	}
 
 	u.Delete()
+}
+
+func TestDueAssignments(t *testing.T) {
+	/*u, err := RegisterUser("due_assignments_test", "go", "golang.com")
+	if err != nil {
+		panic(err)
+	}
+
+	for i := 0; i < 10; i++ {
+		u.CreateAssignment("Test", "testing", "terster")
+	}
+
+	tm := time.Now()
+
+	as, err := u.DueAssignments(tm)
+
+	if len(as) != 10 {
+		t.Errorf("Expecting 10 assignments after %v got %v", tm.UnixNano(), len(as))
+	}
+
+	u.Delete()*/
 }
