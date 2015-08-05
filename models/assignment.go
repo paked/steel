@@ -14,6 +14,12 @@ type Assignment struct {
 	Due         time.Time
 }
 
+func (a *Assignment) Delete() error {
+	_, err := db.Exec("DELETE FROM assignments WHERE id = ?", a.ID)
+
+	return err
+}
+
 type Submission struct {
 	ID       int64
 	Thoughts string

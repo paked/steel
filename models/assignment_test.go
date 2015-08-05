@@ -36,17 +36,19 @@ func TestAssignments(t *testing.T) {
 		t.Error("Submission values were not correct")
 	}
 
+	a.Delete()
 	u.Delete()
 }
 
 func TestDueAssignments(t *testing.T) {
-	/*u, err := RegisterUser("due_assignments_test", "go", "golang.com")
+	u, err := RegisterUser("due_assignments_test", "go", "golang.com")
 	if err != nil {
 		panic(err)
 	}
 
 	for i := 0; i < 10; i++ {
-		u.CreateAssignment("Test", "testing", "terster")
+		a, _ := u.CreateAssignment("Test", "testing", "terster")
+		defer a.Delete()
 	}
 
 	tm := time.Now()
@@ -57,5 +59,5 @@ func TestDueAssignments(t *testing.T) {
 		t.Errorf("Expecting 10 assignments after %v got %v", tm.UnixNano(), len(as))
 	}
 
-	u.Delete()*/
+	u.Delete()
 }

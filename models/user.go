@@ -151,7 +151,7 @@ func (u *User) StartAssignment(id int64) (Submission, error) {
 
 func (u *User) DueAssignments(before time.Time) ([]Assignment, error) {
 	var as []Assignment
-	rows, err := db.Query("SELECT id, name, description, explanation, due FROM assignments WHERE due < ?", before.Unix())
+	rows, err := db.Query("SELECT id, name, description, explanation, due FROM assignments WHERE due < ?", before.UnixNano())
 	if err != nil {
 		return as, err
 	}
@@ -167,7 +167,7 @@ func (u *User) DueAssignments(before time.Time) ([]Assignment, error) {
 			return as, err
 		}
 
-		a.Due = time.Unix(unixTime, 0)
+		a.Due = time.Unix(0, unixTime)
 
 		as = append(as, a)
 	}
