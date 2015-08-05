@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
+	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 )
 
@@ -15,8 +15,10 @@ func main() {
 		fmt.Fprintln(w, "Hello, World!")
 	})
 
-	http.Handle("/", r)
+	n := negroni.New()
+	n.Use(negroni.NewLogger())
 
-	log.Println("Serving on localhost:8080")
-	log.Println(http.ListenAndServe("localhost:8080", nil))
+	n.UseHandler(r)
+
+	n.Run("localhost:8080")
 }
