@@ -18,6 +18,14 @@ var (
 	db *sql.DB
 )
 
+func InitDB() {
+	var err error
+	db, err = sql.Open("sqlite3", "db.db")
+	if err != nil {
+		panic(err)
+	}
+}
+
 type User struct {
 	ID           int64
 	Username     string
