@@ -4,27 +4,34 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/codegangsta/negroni"
+	// "github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/paked/gerrycode/communicator"
 	"github.com/paked/steel/models"
 )
 
 func main() {
-	r := mux.NewRouter()
+	routes := mux.NewRouter()
 
-	r.HandleFunc("/api/user/login", LoginHandler).Methods("POST")
-	r.HandleFunc("/api/user/register", RegisterHandler).Methods("POST")
+	m := routes.PathPrefix("/api").Subrouter()
+	m.HandleFunc("/user/login", LoginHandler).Methods("POST")
+	m.HandleFunc("/user/register", RegisterHandler).Methods("POST")
 
-	n := negroni.New()
-	n.Use(negroni.NewLogger())
-	n.Use(negroni.NewStatic(http.Dir("static/")))
-
-	n.UseHandler(r)
+	r := m.PathPrefix("/").Subrouter()
+	r.HandleFunc("/party", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "you got into the party!")
+	})
 
 	models.InitDB()
 
-	n.Run("localhost:8080")
+	http.ListenAndServe("localhost:8080", routes)
+	/*
+		n := negroni.New()
+		n.Use(negroni.NewLogger())
+		n.Use(negroni.NewStatic(http.Dir("static/")))
+
+
+		n.Run("localhost:8080")*/
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
