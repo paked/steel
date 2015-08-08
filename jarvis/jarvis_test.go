@@ -16,12 +16,10 @@ func TestServer(t *testing.T) {
 
 	var reply RunnerReply
 	args := RunnerArgs{
-		Files: []File{
-			{
-				Name:     "main.js",
-				Contents: "console.log('Hello, World!')",
-				Entry:    true,
-			},
+		Main: File{
+			Name:     "main",
+			Type:     "js",
+			Contents: "console.log('Hello, World!')",
 		},
 		ProgramName: "Hello to the world!",
 	}

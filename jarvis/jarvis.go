@@ -1,11 +1,14 @@
 package jarvis
 
 import (
+	"bytes"
 	"errors"
 	"log"
 	"net"
 	"net/http"
 	"net/rpc"
+	"os"
+	"os/exec"
 )
 
 func NewServer() {
@@ -22,14 +25,15 @@ func NewServer() {
 }
 
 type File struct {
-	Name     string
-	Contents string
-	Entry    bool
+	Name     string // hello_world
+	Type     string // js
+	Contents string // console.log('Hello, World!');
 }
 
 type RunnerArgs struct {
 	ProgramName string
-	Files       []File
+	Main        File
+	Resources   []File
 }
 
 type RunnerReply struct {
@@ -41,13 +45,41 @@ type Runner struct {
 }
 
 func (r *Runner) Run(args *RunnerArgs, reply *RunnerReply) error {
-	if len(args.Files) == 0 {
-		return errors.New("No files submitted")
+	if args.Main == (File{}) {
+		return errors.New("No main file!")
 	}
 
-	*reply = RunnerReply{
-		OK:     true,
-		Output: "Hello, World!",
+	switch args.Main.Type {
+	case "js":
+		f, err := os.Create(os.TempDir() + args.Main.Name + ".js")
+		if err != nil {
+			return err
+		}
+
+		defer func() {
+			f.Close()
+			os.Remove(f.Name())
+		}()
+
+		_, err = f.WriteString(args.Main.Contents)
+		if err != nil {
+			return err
+		}
+
+		cmd := exec.Command("node", f.Name())
+		var out bytes.Buffer
+		cmd.Stdout = &out
+		err = cmd.Run()
+		if err != nil {
+			return err
+		}
+
+		*reply = RunnerReply{
+			OK:     true,
+			Output: out.String(),
+		}
+	default:
+		return errors.New("We do not support that programming language!")
 	}
 
 	return nil
