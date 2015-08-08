@@ -1,16 +1,16 @@
-package main
+package jarvis
 
 import (
-	"fmt"
+	"errors"
 	"log"
 	"net"
 	"net/http"
 	"net/rpc"
 )
 
-func main() {
-	hello := &HelloService{}
-	rpc.Register(hello)
+func NewServer() {
+	runner := &Runner{}
+	rpc.Register(runner)
 	rpc.HandleHTTP()
 
 	l, err := net.Listen("tcp", ":6060")
@@ -21,25 +21,34 @@ func main() {
 	http.Serve(l, nil)
 }
 
-type HelloArgs struct {
-	Name string
+type File struct {
+	Name     string
+	Contents string
+	Entry    bool
 }
 
-type HelloReply struct {
-	Message string
+type RunnerArgs struct {
+	ProgramName string
+	Files       []File
 }
 
-type HelloService struct {
+type RunnerReply struct {
+	OK     bool
+	Output string
 }
 
-func (h *HelloService) Hello(args *HelloArgs, reply *HelloReply) error {
-	reply.Message = fmt.Sprintf("Hello, %s!", args.Name)
-
-	return nil
+type Runner struct {
 }
 
-func (h *HelloService) Goodbye(args *HelloArgs, reply *HelloReply) error {
-	reply.Message = fmt.Sprintf("Goodbye, %s!", args.Name)
+func (r *Runner) Run(args *RunnerArgs, reply *RunnerReply) error {
+	if len(args.Files) == 0 {
+		return errors.New("No files submitted")
+	}
+
+	*reply = RunnerReply{
+		OK:     true,
+		Output: "Hello, World!",
+	}
 
 	return nil
 }
