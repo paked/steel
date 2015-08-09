@@ -37,8 +37,9 @@ type RunnerArgs struct {
 }
 
 type RunnerReply struct {
-	OK     bool
-	Output string
+	OK        bool
+	Output    string
+	ErrOutput string
 }
 
 type Runner struct {
@@ -67,17 +68,18 @@ func (r *Runner) Run(args *RunnerArgs, reply *RunnerReply) error {
 		}
 
 		cmd := exec.Command("node", f.Name())
-		var out bytes.Buffer
-		cmd.Stdout = &out
+		var o bytes.Buffer
+		var e bytes.Buffer
+		cmd.Stdout = &o
+		cmd.Stderr = &e
 		err = cmd.Run()
-		if err != nil {
-			return err
-		}
 
 		*reply = RunnerReply{
-			OK:     true,
-			Output: out.String(),
+			OK:        err == nil,
+			Output:    o.String(),
+			ErrOutput: e.String(),
 		}
+
 	default:
 		return errors.New("We do not support that programming language!")
 	}
