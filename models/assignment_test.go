@@ -36,16 +36,21 @@ func TestAssignments(t *testing.T) {
 		t.Error("Submission values were not correct")
 	}
 
-	if sm, err := s.Members(); err != nil || len(sm) != 0 {
+	if sm, err := s.Members(); err != nil || len(sm) != 1 {
 		t.Error("Failed wrong amount of members (0)", len(sm))
 	}
 
-	err = s.AddMember(u.ID)
+	u2, err := RegisterUser("member_add_test", "pw", "mat")
+	if err != nil {
+		panic(err)
+	}
+
+	err = s.AddMember(u2.ID)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if sm, err := s.Members(); err != nil || len(sm) != 1 {
+	if sm, err := s.Members(); err != nil || len(sm) != 2 {
 		t.Error("Failed wrong amount of members (1)")
 	}
 

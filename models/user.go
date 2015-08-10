@@ -153,6 +153,11 @@ func (u *User) StartAssignment(id int64) (Submission, error) {
 	}
 
 	s.ID, err = res.LastInsertId()
+	if err != nil {
+		return s, err
+	}
+
+	err = s.AddMember(u.ID)
 
 	return s, err
 }
