@@ -35,7 +35,7 @@ type User struct {
 	Permissions  int
 }
 
-func GetUser(key, value string) (User, error) {
+func GetUser(key, value interface{}) (User, error) {
 	u := User{}
 
 	row := db.QueryRow("SELECT id, username, password_hash, email, permission_level FROM users WHERE "+key+" = ?", value)
