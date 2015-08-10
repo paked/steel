@@ -26,6 +26,12 @@ type Submission struct {
 	TeamName string
 }
 
+type SubmissionMember struct {
+	ID           int64
+	SubmissionID int64
+	UserID       int64
+}
+
 func GetAssignment(id int64) (Assignment, error) {
 	a := Assignment{
 		ID: id,
@@ -56,4 +62,29 @@ func GetSubmission(id int64) (Submission, error) {
 	err := row.Scan(&s.TeamName, &s.Thoughts)
 
 	return s, err
+}
+
+func (s *Submission) AddMember(id int64) error {
+	_, err := db.Exec("INSERT INTO team_members (submission, user) VALUES (?, ?)", s.ID, id)
+
+	return err
+}
+
+func (s *Submission) Members() ([]SubmissionMember, error) {
+	var sm []SubmissionMember
+	rows, err := db.Query("SELECT id, submission, user FROM team_members WHERE submission = ?", s.ID)
+	if err != nil {
+		return sm, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		sub := SubmissionMember{}
+		rows.Scan(&sub.ID, &sub.SubmissionID, &sub.UserID)
+
+		sm = append(sm, sub)
+	}
+
+	return sm, nil
 }
