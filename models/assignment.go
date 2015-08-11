@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"database/sql"
+	"errors"
+	"time"
+)
 
 const (
 	timeFormat = "2006-01-02 15:04:05.999999999 -0700 MST"
@@ -65,7 +69,16 @@ func GetSubmission(id int64) (Submission, error) {
 }
 
 func (s *Submission) AddMember(id int64) error {
-	_, err := db.Exec("INSERT INTO team_members (submission, user) VALUES (?, ?)", s.ID, id)
+	row := db.QueryRow("SELECT user FROM team_members WHERE submission = ? AND user = ?", s.ID, id)
+
+	var uid *int64
+	err := row.Scan(uid)
+
+	if uid != nil || (err != nil && err != sql.ErrNoRows) {
+		return errors.New("This user is alreayd a member")
+	}
+
+	_, err = db.Exec("INSERT INTO team_members (submission, user) VALUES (?, ?)", s.ID, id)
 
 	return err
 }

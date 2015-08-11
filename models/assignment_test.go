@@ -40,6 +40,11 @@ func TestAssignments(t *testing.T) {
 		t.Error("Failed wrong amount of members (0)", len(sm))
 	}
 
+	err = s.AddMember(u.ID)
+	if err == nil {
+		t.Error("Should have failed adding a user again")
+	}
+
 	u2, err := RegisterUser("member_add_test", "pw", "mat")
 	if err != nil {
 		panic(err)
