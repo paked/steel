@@ -23,8 +23,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	router := mux.NewRouter()
-	// http://localhost:8080/user/login
 	router.HandleFunc("/user/login", LoginHandler).Methods("POST")
 	router.HandleFunc("/user/register", RegisterHandler).Methods("POST")
 
@@ -38,11 +38,6 @@ func main() {
 	models.InitDB()
 
 	http.ListenAndServe("localhost:8080", n)
-}
-
-func readPrivateKey() ([]byte, error) {
-	privateKey, e := ioutil.ReadFile("keys/app.rsa")
-	return privateKey, e
 }
 
 func GiveCakeHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
@@ -127,4 +122,9 @@ func restrict(fn func(http.ResponseWriter, *http.Request, *jwt.Token)) http.Hand
 
 		fn(w, r, token)
 	}
+}
+
+func readPrivateKey() ([]byte, error) {
+	privateKey, e := ioutil.ReadFile("keys/app.rsa")
+	return privateKey, e
 }
