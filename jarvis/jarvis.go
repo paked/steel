@@ -52,17 +52,7 @@ func (r *Runner) Run(args *RunnerArgs, reply *RunnerReply) error {
 
 	switch args.Main.Type {
 	case "js":
-		f, err := os.Create(os.TempDir() + args.Main.Name + ".js")
-		if err != nil {
-			return err
-		}
-
-		defer func() {
-			f.Close()
-			os.Remove(f.Name())
-		}()
-
-		_, err = f.WriteString(args.Main.Contents)
+		f, err := createFile(args.Main)
 		if err != nil {
 			return err
 		}
@@ -79,10 +69,23 @@ func (r *Runner) Run(args *RunnerArgs, reply *RunnerReply) error {
 			Output:    o.String(),
 			ErrOutput: e.String(),
 		}
-
 	default:
 		return errors.New("We do not support that programming language!")
 	}
 
 	return nil
+}
+
+func createFile(r File) (*os.File, error) {
+	f, err := os.Create(os.TempDir() + r.Name + ".js")
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = f.WriteString(r.Contents)
+	if err != nil {
+		return nil, err
+	}
+
+	return f, err
 }
