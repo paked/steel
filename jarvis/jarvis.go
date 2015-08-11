@@ -52,9 +52,22 @@ func (r *Runner) Run(args *RunnerArgs, reply *RunnerReply) error {
 
 	switch args.Main.Type {
 	case "js":
+		var files []*os.File
+
 		f, err := createFile(args.Main)
 		if err != nil {
 			return err
+		}
+
+		files = append(files, f)
+
+		for _, resc := range args.Resources {
+			f, err := createFile(resc)
+			if err != nil {
+				return err
+			}
+
+			files = append(files, f)
 		}
 
 		cmd := exec.Command("node", f.Name())
@@ -69,6 +82,8 @@ func (r *Runner) Run(args *RunnerArgs, reply *RunnerReply) error {
 			Output:    o.String(),
 			ErrOutput: e.String(),
 		}
+
+		cleanFiles(files)
 	default:
 		return errors.New("We do not support that programming language!")
 	}
@@ -88,4 +103,10 @@ func createFile(r File) (*os.File, error) {
 	}
 
 	return f, err
+}
+
+func cleanFiles(files []*os.File) {
+	for _, f := range files {
+		os.Remove(f.Name())
+	}
 }
