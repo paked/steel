@@ -56,6 +56,7 @@ func TestAssignments(t *testing.T) {
 
 	a.Delete()
 	u.Delete()
+	u2.Delete()
 }
 
 func TestDueAssignments(t *testing.T) {

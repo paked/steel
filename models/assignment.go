@@ -70,21 +70,25 @@ func (s *Submission) AddMember(id int64) error {
 	return err
 }
 
-func (s *Submission) Members() ([]SubmissionMember, error) {
-	var sm []SubmissionMember
-	rows, err := db.Query("SELECT id, submission, user FROM team_members WHERE submission = ?", s.ID)
+func (s *Submission) Members() ([]User, error) {
+	var us []User
+	rows, err := db.Query("SELECT user FROM team_members WHERE submission = ?", s.ID)
 	if err != nil {
-		return sm, err
+		return us, err
 	}
 
 	defer rows.Close()
 
 	for rows.Next() {
-		sub := SubmissionMember{}
-		rows.Scan(&sub.ID, &sub.SubmissionID, &sub.UserID)
+		var uid int64
+		rows.Scan(&uid)
+		u, err := GetUserByID("id", uid)
+		if err != nil {
+			return us, err
+		}
 
-		sm = append(sm, sub)
+		us = append(us, u)
 	}
 
-	return sm, nil
+	return us, nil
 }

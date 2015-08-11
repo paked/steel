@@ -35,10 +35,22 @@ type User struct {
 	Permissions  int
 }
 
-func GetUser(key, value interface{}) (User, error) {
+func GetUser(key, value string) (User, error) {
 	u := User{}
 
 	row := db.QueryRow("SELECT id, username, password_hash, email, permission_level FROM users WHERE "+key+" = ?", value)
+	err := row.Scan(&u.ID, &u.Username, &u.PasswordHash, &u.Email, &u.Permissions)
+	if err != nil {
+		return u, err
+	}
+
+	return u, nil
+}
+
+func GetUserByID(key string, id int64) (User, error) {
+	u := User{}
+
+	row := db.QueryRow("SELECT id, username, password_hash, email, permission_level FROM users WHERE id = ?", id)
 	err := row.Scan(&u.ID, &u.Username, &u.PasswordHash, &u.Email, &u.Permissions)
 	if err != nil {
 		return u, err
