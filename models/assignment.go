@@ -3,11 +3,11 @@ package models
 import "time"
 
 type Assignment struct {
-	ID          int64
-	Name        string
-	Description string
-	Explanation string
-	Due         time.Time
+	ID          int64     `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Explanation string    `json:"explanation"`
+	Due         time.Time `json:"due"`
 }
 
 func (a *Assignment) Delete() error {

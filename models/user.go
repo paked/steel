@@ -27,12 +27,12 @@ func InitDB() {
 }
 
 type User struct {
-	ID           int64
-	Username     string
-	PasswordHash string
-	Salt         string
-	Email        string
-	Permissions  int
+	ID           int64  `json:"id"`
+	Username     string `json:"username"`
+	PasswordHash string `json:"-"`
+	Salt         string `json:"-"`
+	Email        string `json:"email"`
+	Permissions  int    `json:"permissions"`
 }
 
 func GetUser(key, value string) (User, error) {

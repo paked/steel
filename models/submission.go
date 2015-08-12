@@ -6,17 +6,17 @@ import (
 )
 
 type Submission struct {
-	ID         int64
-	Assignment int64
-	Thoughts   string
-	TeamName   string
+	ID         int64  `json:"id"`
+	Assignment int64  `json:"assignment"`
+	Thoughts   string `json:"thoughts"`
+	TeamName   string `json:"team_name"`
 }
 
 type SubmissionMember struct {
-	ID           int64
-	SubmissionID int64
-	Assignment   int64
-	UserID       int64
+	ID           int64 `json:"id"`
+	SubmissionID int64 `json:"submission"`
+	Assignment   int64 `json:"assignment"`
+	UserID       int64 `json:"user"`
 }
 
 func GetSubmission(id int64) (Submission, error) {
