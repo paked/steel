@@ -15,6 +15,7 @@ type Submission struct {
 type SubmissionMember struct {
 	ID           int64
 	SubmissionID int64
+	Assignment   int64
 	UserID       int64
 }
 
@@ -30,23 +31,23 @@ func GetSubmission(id int64) (Submission, error) {
 }
 
 func (s *Submission) AddMember(id int64) error {
-	row := db.QueryRow("SELECT user FROM team_members WHERE submission = ? AND user = ?", s.ID, id)
+	row := db.QueryRow("SELECT user FROM team_members WHERE assignment = ? AND user = ?", s.Assignment, id)
 
 	var uid *int64
 	err := row.Scan(uid)
 
 	if uid != nil || (err != nil && err != sql.ErrNoRows) {
-		return errors.New("This user is alreayd a member")
+		return errors.New("This user is alreayd a member of another team")
 	}
 
-	_, err = db.Exec("INSERT INTO team_members (submission, user) VALUES (?, ?)", s.ID, id)
+	_, err = db.Exec("INSERT INTO team_members (submission, user, assignment) VALUES (?, ?, ?)", s.ID, id, s.Assignment)
 
 	return err
 }
 
 func (s *Submission) Members() ([]User, error) {
 	var us []User
-	rows, err := db.Query("SELECT user FROM team_members WHERE submission = ?", s.ID)
+	rows, err := db.Query("SELECT user FROM team_members WHERE submission = ? AND assignment = ?", s.ID, s.Assignment)
 	if err != nil {
 		return us, err
 	}

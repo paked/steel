@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
 	"testing"
 	"time"
 )
@@ -96,7 +97,7 @@ func TestDueAssignments(t *testing.T) {
 }
 
 func TestAllSubmissions(t *testing.T) {
-	u, err := RegisterUser("all_submissions_test", "go", "golang.com")
+	u, err := RegisterUser("all_submissions_test_master", "go", "golang.com")
 	if err != nil {
 		t.Error("User could not be registered", err)
 		t.Fail()
@@ -110,12 +111,20 @@ func TestAllSubmissions(t *testing.T) {
 	sm := []Submission{}
 
 	for i := 0; i < 10; i++ {
+		u, err := RegisterUser(fmt.Sprintf("all_submissions_test_%v", i), "go", "golang.com")
+		if err != nil {
+			t.Error("User could not be registered", err)
+			t.Fail()
+		}
+
 		s, err := u.StartAssignment(a)
 		if err != nil {
 			t.Error("Could not start assignment")
 		}
 
 		sm = append(sm, s)
+
+		defer u.Delete()
 	}
 
 	if len(sm) != 10 {
