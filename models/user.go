@@ -156,10 +156,11 @@ func (u *User) CreateAssignment(name, description, explanation string) (Assignme
 
 func (u *User) StartAssignment(id int64) (Submission, error) {
 	s := Submission{
-		TeamName: u.Username + "'s Assignment",
+		TeamName:   u.Username + "'s Assignment",
+		Assignment: id,
 	}
 
-	res, err := db.Exec("INSERT INTO submissions (team_name) VALUES (?)", s.TeamName)
+	res, err := db.Exec("INSERT INTO submissions (team_name, assignment) VALUES (?, ?)", s.TeamName, s.Assignment)
 	if err != nil {
 		return s, err
 	}

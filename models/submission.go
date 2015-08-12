@@ -6,9 +6,10 @@ import (
 )
 
 type Submission struct {
-	ID       int64
-	Thoughts string
-	TeamName string
+	ID         int64
+	Assignment int64
+	Thoughts   string
+	TeamName   string
 }
 
 type SubmissionMember struct {
@@ -22,8 +23,8 @@ func GetSubmission(id int64) (Submission, error) {
 		ID: id,
 	}
 
-	row := db.QueryRow("SELECT team_name, thoughts FROM submissions WHERE id = ?", s.ID)
-	err := row.Scan(&s.TeamName, &s.Thoughts)
+	row := db.QueryRow("SELECT team_name, thoughts, assignment FROM submissions WHERE id = ?", s.ID)
+	err := row.Scan(&s.TeamName, &s.Thoughts, &s.Assignment)
 
 	return s, err
 }
