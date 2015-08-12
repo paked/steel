@@ -27,7 +27,7 @@ func TestAssignments(t *testing.T) {
 		t.Error("Assignment values were not set properly")
 	}
 
-	s, err := u.StartAssignment(a.ID)
+	s, err := u.StartAssignment(a)
 	if err != nil {
 		t.Error("Could not start assignment: ", err)
 	}
@@ -98,7 +98,7 @@ func TestDueAssignments(t *testing.T) {
 func TestAllSubmissions(t *testing.T) {
 	u, err := RegisterUser("all_submissions_test", "go", "golang.com")
 	if err != nil {
-		t.Error("User could not be registered")
+		t.Error("User could not be registered", err)
 		t.Fail()
 	}
 
@@ -110,7 +110,7 @@ func TestAllSubmissions(t *testing.T) {
 	sm := []Submission{}
 
 	for i := 0; i < 10; i++ {
-		s, err := u.StartAssignment(a.ID)
+		s, err := u.StartAssignment(a)
 		if err != nil {
 			t.Error("Could not start assignment")
 		}
@@ -122,4 +122,6 @@ func TestAllSubmissions(t *testing.T) {
 		t.Error("Wrong amount of submissions")
 	}
 
+	a.Delete()
+	u.Delete()
 }
