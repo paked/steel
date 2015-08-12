@@ -27,6 +27,7 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/user/login", LoginHandler).Methods("POST")
 	router.HandleFunc("/user/register", RegisterHandler).Methods("POST")
+	router.HandleFunc("/assignments", restrict(CreateAssignmentHandler)).Methods("POST")
 
 	router.Handle("/cake", restrict(GiveCakeHandler))
 
@@ -97,6 +98,39 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	c.OKWithData("Successfully registered that user", u)
 }
 
+func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+
+	id, ok := t.Claims["id"].(int64)
+	if !ok {
+		c.Fail("Not a valid ID in token")
+		return
+	}
+
+	u, err := models.GetUserByID("id", id)
+	if err != nil {
+		c.Fail("Unable to get user")
+		return
+	}
+
+	name := r.FormValue("name")
+	description := r.FormValue("description")
+	explanation := r.FormValue("explanation")
+
+	if name == "" || description == "" || explanation == "" {
+		c.Fail("Not valid name/description/explanation")
+		return
+	}
+
+	a, err := u.CreateAssignment(name, description, explanation)
+	if err != nil {
+		c.Fail("Could not create assignment " + err.Error())
+		return
+	}
+
+	c.OKWithData("Here is the assignment", a)
+}
+
 func restrict(fn func(http.ResponseWriter, *http.Request, *jwt.Token)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ts := r.FormValue("access_token")
@@ -126,5 +160,6 @@ func restrict(fn func(http.ResponseWriter, *http.Request, *jwt.Token)) http.Hand
 
 func readPrivateKey() ([]byte, error) {
 	privateKey, e := ioutil.ReadFile("keys/app.rsa")
+
 	return privateKey, e
 }
