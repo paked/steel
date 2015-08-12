@@ -19,6 +19,8 @@ func TestAssignments(t *testing.T) {
 		panic(err)
 	}
 
+	u.MakeAdmin()
+
 	a, err := u.CreateAssignment("Test", "descritpion", "explanation")
 	if err != nil {
 		t.Error("Could not create Assignment: ", err)
@@ -80,6 +82,8 @@ func TestDueAssignments(t *testing.T) {
 		panic(err)
 	}
 
+	u.MakeAdmin()
+
 	for i := 0; i < 10; i++ {
 		a, _ := u.CreateAssignment("Test", "testing", "terster")
 		defer a.Delete()
@@ -102,6 +106,8 @@ func TestAllSubmissions(t *testing.T) {
 		t.Error("User could not be registered", err)
 		t.Fail()
 	}
+
+	u.MakeAdmin()
 
 	a, err := u.CreateAssignment("A", "desc", "expl")
 	if err != nil {

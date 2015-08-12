@@ -137,7 +137,13 @@ func (u *User) updatePermissions(level int) error {
 }
 
 func (u *User) CreateAssignment(name, description, explanation string) (Assignment, error) {
-	a := Assignment{
+	a := Assignment{}
+
+	if u.Permissions != AdminPermissions {
+		return a, errors.New("Incorrect permissions")
+	}
+
+	a = Assignment{
 		Name:        name,
 		Description: description,
 		Explanation: explanation,
