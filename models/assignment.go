@@ -36,3 +36,27 @@ func GetAssignment(id int64) (Assignment, error) {
 
 	return a, nil
 }
+
+func (a *Assignment) Submissions() ([]Submission, error) {
+	var sm []Submission
+
+	rows, err := db.Query("SELECT id, thoughts, team_name FROM submissions WHERE assignment = ?", a.ID)
+	if err != nil {
+		return sm, err
+	}
+
+	for rows.Next() {
+		s := Submission{
+			ID: a.ID,
+		}
+
+		err = rows.Scan(&s.ID, &s.Thoughts, &s.TeamName)
+		if err != nil {
+			return sm, err
+		}
+
+		sm = append(sm, s)
+	}
+
+	return sm, nil
+}

@@ -94,3 +94,32 @@ func TestDueAssignments(t *testing.T) {
 
 	u.Delete()
 }
+
+func TestAllSubmissions(t *testing.T) {
+	u, err := RegisterUser("all_submissions_test", "go", "golang.com")
+	if err != nil {
+		t.Error("User could not be registered")
+		t.Fail()
+	}
+
+	a, err := u.CreateAssignment("A", "desc", "expl")
+	if err != nil {
+		t.Error("Could not make assignment")
+	}
+
+	sm := []Submission{}
+
+	for i := 0; i < 10; i++ {
+		s, err := u.StartAssignment(a.ID)
+		if err != nil {
+			t.Error("Could not start assignment")
+		}
+
+		sm = append(sm, s)
+	}
+
+	if len(sm) != 10 {
+		t.Error("Wrong amount of submissions")
+	}
+
+}
