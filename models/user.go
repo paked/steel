@@ -176,7 +176,7 @@ func (u *User) StartAssignment(a Assignment) (Submission, error) {
 		return s, err
 	}
 
-	err = s.AddMember(u.ID)
+	err = s.AddMember(*u)
 
 	return s, err
 }

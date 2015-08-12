@@ -52,7 +52,7 @@ func TestAssignments(t *testing.T) {
 		t.Error("Failed wrong amount of members (0)", len(sm))
 	}
 
-	err = s.AddMember(u.ID)
+	err = s.AddMember(u)
 	if err == nil {
 		t.Error("Should have failed adding a user again")
 	}
@@ -62,7 +62,7 @@ func TestAssignments(t *testing.T) {
 		panic(err)
 	}
 
-	err = s.AddMember(u2.ID)
+	err = s.AddMember(u2)
 	if err != nil {
 		t.Error(err)
 	}

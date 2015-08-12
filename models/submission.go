@@ -30,8 +30,8 @@ func GetSubmission(id int64) (Submission, error) {
 	return s, err
 }
 
-func (s *Submission) AddMember(id int64) error {
-	row := db.QueryRow("SELECT user FROM team_members WHERE assignment = ? AND user = ?", s.Assignment, id)
+func (s *Submission) AddMember(u User) error {
+	row := db.QueryRow("SELECT user FROM team_members WHERE assignment = ? AND user = ?", s.Assignment, u.ID)
 
 	var uid *int64
 	err := row.Scan(uid)
@@ -40,7 +40,7 @@ func (s *Submission) AddMember(id int64) error {
 		return errors.New("This user is alreayd a member of another team")
 	}
 
-	_, err = db.Exec("INSERT INTO team_members (submission, user, assignment) VALUES (?, ?, ?)", s.ID, id, s.Assignment)
+	_, err = db.Exec("INSERT INTO team_members (submission, user, assignment) VALUES (?, ?, ?)", s.ID, u.ID, s.Assignment)
 
 	return err
 }
