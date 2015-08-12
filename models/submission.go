@@ -1,5 +1,10 @@
 package models
 
+import (
+	"database/sql"
+	"errors"
+)
+
 type Submission struct {
 	ID       int64
 	Thoughts string
@@ -59,4 +64,16 @@ func (s *Submission) Members() ([]User, error) {
 	}
 
 	return us, nil
+}
+
+func (s *Submission) Rename(name string) error {
+	_, err := db.Exec("UPDATE submissions SET team_name=? WHERE id = ?", name, s.ID)
+
+	if err != nil {
+		return err
+	}
+
+	s.TeamName = name
+
+	return nil
 }

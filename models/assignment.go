@@ -1,10 +1,6 @@
 package models
 
-import (
-	"database/sql"
-	"errors"
-	"time"
-)
+import "time"
 
 type Assignment struct {
 	ID          int64
@@ -19,6 +15,7 @@ func (a *Assignment) Delete() error {
 
 	return err
 }
+
 func GetAssignment(id int64) (Assignment, error) {
 	a := Assignment{
 		ID: id,

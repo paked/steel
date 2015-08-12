@@ -36,6 +36,15 @@ func TestAssignments(t *testing.T) {
 		t.Error("Submission values were not correct")
 	}
 
+	err = s.Rename("My Submission")
+	if err != nil {
+		t.Error("Could not rename submission")
+	}
+
+	if s.TeamName != "My Submission" {
+		t.Error("Wrong submission name")
+	}
+
 	if sm, err := s.Members(); err != nil || len(sm) != 1 {
 		t.Error("Failed wrong amount of members (0)", len(sm))
 	}
