@@ -25,6 +25,7 @@ func main() {
 	}
 
 	router := mux.NewRouter()
+	router.HandleFunc("/user", GetUserHandler).Methods("GET")
 	router.HandleFunc("/user/login", LoginHandler).Methods("POST")
 	router.HandleFunc("/user/register", RegisterHandler).Methods("POST")
 	router.HandleFunc("/assignments", restrict(CreateAssignmentHandler)).Methods("POST")
@@ -43,6 +44,57 @@ func main() {
 
 func GiveCakeHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 	fmt.Fprintln(w, "*cake*")
+}
+
+func GetUserHandler(w http.ResponseWriter, r *http.Request) {
+	c := communicator.New(w)
+	username := r.FormValue("username")
+	sid := r.FormValue("id")
+
+	if sid != "" {
+		var id int64
+		fmt.Sscanf(sid, "%d", &id)
+		fmt.Println(id)
+
+		u, err := models.GetUserByID(id)
+		if err != nil {
+			c.Fail("Error getting user")
+			return
+		}
+
+		c.OKWithData("Here is your user: ", u)
+		return
+	}
+
+	if username != "" {
+		u, err := models.GetUser("username", username)
+		if err != nil {
+			c.Fail("Could not get that username")
+			return
+		}
+
+		c.OKWithData("Here is your user: ", u)
+		return
+	}
+
+	restrict(func(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+		c := communicator.New(w)
+		id, ok := t.Claims["id"].(int64)
+		if !ok {
+			c.Fail("Could not get that ID")
+			return
+		}
+
+		u, err := models.GetUserByID(id)
+		if err != nil {
+			c.Fail("Error getting user")
+			return
+		}
+
+		c.OKWithData("Here is your user", u)
+	})
+
+	c.Fail("You didn't provide any data :/")
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
