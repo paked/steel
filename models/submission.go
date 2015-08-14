@@ -57,7 +57,7 @@ func (s *Submission) Members() ([]User, error) {
 	for rows.Next() {
 		var uid int64
 		rows.Scan(&uid)
-		u, err := GetUserByID("id", uid)
+		u, err := GetUserByID(uid)
 		if err != nil {
 			return us, err
 		}

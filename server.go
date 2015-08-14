@@ -107,7 +107,7 @@ func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Toke
 		return
 	}
 
-	u, err := models.GetUserByID("id", id)
+	u, err := models.GetUserByID(id)
 	if err != nil {
 		c.Fail("Unable to get user")
 		return

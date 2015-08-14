@@ -47,7 +47,7 @@ func GetUser(key, value string) (User, error) {
 	return u, nil
 }
 
-func GetUserByID(key string, id int64) (User, error) {
+func GetUserByID(id int64) (User, error) {
 	u := User{}
 
 	row := db.QueryRow("SELECT id, username, password_hash, email, permission_level FROM users WHERE id = ?", id)
