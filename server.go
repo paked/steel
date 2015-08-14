@@ -26,6 +26,7 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/user", GetUserHandler).Methods("GET")
+	router.HandleFunc("/user/admin", GetPrivileges).Methods("GET")
 	router.HandleFunc("/user/login", LoginHandler).Methods("POST")
 	router.HandleFunc("/user/register", RegisterHandler).Methods("POST")
 	router.HandleFunc("/assignments", restrict(CreateAssignmentHandler)).Methods("POST")
@@ -40,6 +41,22 @@ func main() {
 	models.InitDB()
 
 	http.ListenAndServe("localhost:8080", n)
+}
+
+func GetPrivileges(w http.ResponseWriter, r *http.Request) {
+	c := communicator.New(w)
+	sid := r.FormValue("id")
+
+	var id int64
+	fmt.Sscanf(sid, "%d", &id)
+
+	u, err := models.GetUserByID(id)
+	if err != nil {
+		c.Fail("Could not get user by ID")
+		return
+	}
+
+	c.OKWithData("Is the user admin?", u.IsAdmin())
 }
 
 func GiveCakeHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
