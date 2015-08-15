@@ -49,6 +49,7 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
     var u = {
         username: undefined,
         token: localStorage.token,
+        admin: false,
         setToken: function(t) {
             console.log('changed token to:', t);
             u.token = t;
@@ -85,7 +86,10 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
                         return;
                     }
 
-                    $rootScope.$broadcast('user.logged_in')
+                    u.admin = resp.data.data.permissions == 1;
+                    u.username  = resp.data.data.username;
+
+                    $rootScope.$broadcast('user.logged_in');
                 });
         } 
     };
@@ -98,10 +102,10 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
 app.controller('HeaderCtrl', ['$scope', 'user', '$location', function($scope, user, $location) {
 
     $scope.loggedIn = false;
-    $scope.username = "<nothing-in-particular>";
+    $scope.user = undefined;
 
     $scope.$on('user.logged_in', function(evt) {
-        $scope.username = user.username;
+        $scope.user = user;
         $scope.loggedIn = true;
     });
 }]);
