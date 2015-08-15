@@ -95,12 +95,15 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	restrict(func(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+		fmt.Println("hello?")
 		c := communicator.New(w)
-		id, ok := t.Claims["id"].(int64)
+		fid, ok := t.Claims["id"].(float64)
 		if !ok {
 			c.Fail("Could not get that ID")
 			return
 		}
+
+		id := int64(fid)
 
 		u, err := models.GetUserByID(id)
 		if err != nil {
@@ -109,9 +112,10 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		c.OKWithData("Here is your user", u)
-	})
 
-	c.Fail("You didn't provide any data :/")
+	})(w, r)
+
+	// c.Fail("You didn't provide any data :/")
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
