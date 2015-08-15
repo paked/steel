@@ -14,6 +14,10 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/sandbox.html',
             controller: 'SandboxCtrl'
         }).
+        when('/admin', {
+            templateUrl: 'templates/admin.html',
+            controller: 'AdminCtrl'
+        }).
         when('/auth/:method', {
             templateUrl: 'templates/auth.html',
             controller: 'AuthCtrl'
@@ -97,6 +101,13 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
     u.loggedIn();
 
     return u;
+}]);
+
+app.controller('AdminCtrl', ['$scope', '$http', '$location', 'user', function($scope, $http, $location, user) {
+    if (!user.admin) {
+        $location.path('/');
+        return;
+    }
 }]);
 
 app.controller('HeaderCtrl', ['$scope', 'user', '$location', function($scope, user, $location) {
