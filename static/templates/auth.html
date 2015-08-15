@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <h1>{{ current | titlecase }}</h1>
+        <p>Did you mean to <a ng-href="#/auth/{{ other }}">{{ other }}</a>?</p>
+
+        <div class="form-group">
+            <label for="un">Username</label>
+            <input name="un" type="text" class="form-control" placeholder="username" ng-model="username">
+            <label for="pw">Password</label>
+            <input name="pw" type="password" class="form-control" ng-model="password" placeholder="password">
+            <label for="em" ng-show="current == 'register'">Email</label>
+            <input name="em" ng-show="current == 'register'" ng-model="email" type="email" class="form-control" placeholder="email@example.com">
+            <br>
+            <button class="btn btn-primary" ng-click="go()">Go!</button>
+        </div>
+    </div>
+</div>

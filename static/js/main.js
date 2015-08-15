@@ -14,6 +14,10 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/sandbox.html',
             controller: 'SandboxCtrl'
         }).
+        when('/auth/:method', {
+            templateUrl: 'templates/auth.html',
+            controller: 'AuthCtrl'
+        }).
         when('/', {
             templateUrl: 'templates/feed.html',
             controller: 'FeedCtrl'
@@ -21,6 +25,32 @@ app.config(['$routeProvider', function($routeProvider) {
         otherwise({
             redirectTo: '/'
         });
+}]);
+
+app.filter('titlecase', function() {
+    return function(input) {
+        var words = input.split(' ');
+        for (i in words) {
+            words[i] = words[i].toLowerCase();
+            words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1)
+        }
+
+        return words.join(' ')
+    };
+});
+
+app.controller('AuthCtrl', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
+    if ($routeParams.method != 'login' && $routeParams.method != 'register') {
+        $location.path('/');
+        return;
+    }
+
+    $scope.current = $routeParams.method;
+    $scope.other = $scope.current == 'login' ? 'register' : 'login';
+
+    $scope.go = function() {
+        console.log($scope.username, $scope.password, $scope.email);
+    };
 }]);
 
 app.controller('SandboxCtrl', ['$scope', '$http', function($scope, $http) {
