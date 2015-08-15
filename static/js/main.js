@@ -18,6 +18,12 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/auth.html',
             controller: 'AuthCtrl'
         }).
+        when('/login', {
+            redirectTo: '/auth/login'
+        }).
+        when('/register', {
+            redirectTo: '/auth/register'
+        }).
         when('/', {
             templateUrl: 'templates/feed.html',
             controller: 'FeedCtrl'
@@ -39,7 +45,7 @@ app.filter('titlecase', function() {
     };
 });
 
-app.factory('user', ['$http', '$location', function($http, $location) {
+app.factory('user', ['$http', '$location', '$rootScope', function($http, $location, $rootScope) {
     var u = {
         username: undefined,
         token: localStorage.token,
@@ -47,8 +53,8 @@ app.factory('user', ['$http', '$location', function($http, $location) {
             console.log('changed token to:', t);
             u.token = t;
             localStorage.token = t;
-
-            // broadcast something?
+            
+            $rootScope.$broadcast('user.update');
         },
         auth: function(method, username, password, email)  {
             var url = '/user/' + method + '?username=' + username + '&password=' + password + '&email=' + email;
@@ -63,13 +69,41 @@ app.factory('user', ['$http', '$location', function($http, $location) {
                         return;
                     }
 
+                    u.username = username;
                     u.setToken(resp.data.data);
+
+                    $rootScope.$broadcast('user.logged_in')
+
                     $location.path('/');
                 });
-        }
+        },
+        loggedIn: function() {
+            $http.get('/user?access_token=' + u.token).
+                then(function(resp) {
+                    if (resp.data.status.error) {
+                        $location.path('/auth/login');
+                        return;
+                    }
+
+                    $rootScope.$broadcast('user.logged_in')
+                });
+        } 
     };
 
-    return u
+    u.loggedIn();
+
+    return u;
+}]);
+
+app.controller('HeaderCtrl', ['$scope', 'user', '$location', function($scope, user, $location) {
+
+    $scope.loggedIn = false;
+    $scope.username = "<nothing-in-particular>";
+
+    $scope.$on('user.logged_in', function(evt) {
+        $scope.username = user.username;
+        $scope.loggedIn = true;
+    });
 }]);
 
 app.controller('AuthCtrl', ['$scope', '$routeParams', '$http', '$location', 'user', function($scope, $routeParams, $http, $location, user) {
