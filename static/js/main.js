@@ -39,7 +39,40 @@ app.filter('titlecase', function() {
     };
 });
 
-app.controller('AuthCtrl', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
+app.factory('user', ['$http', '$location', function($http, $location) {
+    var u = {
+        username: undefined,
+        token: localStorage.token,
+        setToken: function(t) {
+            console.log('changed token to:', t);
+            u.token = t;
+            localStorage.token = t;
+
+            // broadcast something?
+        },
+        auth: function(method, username, password, email)  {
+            var url = '/user/' + method + '?username=' + username + '&password=' + password + '&email=' + email;
+            console.log('url: ', url);
+
+            $http.post(url).
+                then(function(resp) {
+                    // TODO error handling
+                    if (resp.data.data.username !== undefined) {
+                        console.log(resp.data);
+                        $location.path('/auth/login');
+                        return;
+                    }
+
+                    u.setToken(resp.data.data);
+                    $location.path('/');
+                });
+        }
+    };
+
+    return u
+}]);
+
+app.controller('AuthCtrl', ['$scope', '$routeParams', '$http', '$location', 'user', function($scope, $routeParams, $http, $location, user) {
     if ($routeParams.method != 'login' && $routeParams.method != 'register') {
         $location.path('/');
         return;
@@ -50,6 +83,7 @@ app.controller('AuthCtrl', ['$scope', '$routeParams', '$http', '$location', func
 
     $scope.go = function() {
         console.log($scope.username, $scope.password, $scope.email);
+        user.auth($scope.current, $scope.username, $scope.password, $scope.email);
     };
 }]);
 
