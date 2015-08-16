@@ -92,7 +92,12 @@ func (r *Runner) Run(args *RunnerArgs, reply *RunnerReply) error {
 }
 
 func createFile(r File) (*os.File, error) {
-	f, err := os.Create(os.TempDir() + r.Name + ".js")
+	td := os.TempDir()
+	if td[len(td)-1] != '/' {
+		td += string('/')
+	}
+
+	f, err := os.Create(td + r.Name + ".js")
 	if err != nil {
 		return nil, err
 	}
