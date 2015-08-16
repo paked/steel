@@ -1,19 +1,18 @@
 package models
 
 import (
-	"database/sql"
+	"os"
 	"testing"
 )
 
+func TestMain(m *testing.M) {
+	createTestDB()
+	c := m.Run()
+	deleteTestDB()
+
+	os.Exit(c)
+}
 func TestRegister(t *testing.T) {
-	var err error
-	db, err = sql.Open("sqlite3", "../db.db")
-
-	if err != nil {
-		t.Log(err)
-		t.Error("Could not connect to db")
-	}
-
 	if _, err := RegisterUser("paked", "pw", "hat"); err != nil {
 		t.Error("Hello")
 	}
@@ -33,16 +32,8 @@ func TestRegister(t *testing.T) {
 }
 
 func TestLogin(t *testing.T) {
-	var err error
-	db, err = sql.Open("sqlite3", "../db.db")
-
-	if err != nil {
-		t.Log(err)
-		t.Error("Could not connect to DB")
-	}
-
-	paked, err := GetUser("username", "paked")
-	newbie, err := GetUser("username", "newbie")
+	paked, _ := GetUser("username", "paked")
+	newbie, _ := GetUser("username", "newbie")
 
 	if ok, err := paked.Login("pw"); err != nil || !ok {
 		t.Error("Could not log in user:", err)

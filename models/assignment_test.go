@@ -1,22 +1,15 @@
 package models
 
 import (
-	"database/sql"
 	"fmt"
 	"testing"
 	"time"
 )
 
-func TestAssignments(t *testing.T) {
-	var err error
-	db, err = sql.Open("sqlite3", "../db.db")
-	if err != nil {
-		panic(err)
-	}
-
+func TestCAssignments(t *testing.T) {
 	u, err := RegisterUser("assignment_test", "pw", "mat")
 	if err != nil {
-		panic(err)
+		t.Error(err)
 	}
 
 	u.MakeAdmin()
@@ -59,7 +52,7 @@ func TestAssignments(t *testing.T) {
 
 	u2, err := RegisterUser("member_add_test", "pw", "mat")
 	if err != nil {
-		panic(err)
+		t.Error(err)
 	}
 
 	err = s.AddMember(u2)
