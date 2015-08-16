@@ -10,7 +10,7 @@ install:
 	- openssl rsa -in keys/app.rsa -pubout > keys/app.rsa.pub
 
 test:
-	- go test -v
+	- go test -v ./models ./jarvis
 
 build:
 	- rm steel
