@@ -7,5 +7,5 @@ install:
  - make install
 
 script:
- - make test 
+ - go test -v ./models ./jarvis
 
