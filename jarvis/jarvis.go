@@ -16,12 +16,12 @@ func NewServer() {
 	rpc.Register(runner)
 	rpc.HandleHTTP()
 
-	l, err := net.Listen("tcp", ":6060")
+	l, err := net.Listen("tcp", "localhost:6060")
 	if err != nil {
 		log.Fatal("listen error: ", err)
 	}
 
-	http.Serve(l, nil)
+	go http.Serve(l, nil)
 }
 
 type File struct {

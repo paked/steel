@@ -7,7 +7,7 @@ import (
 )
 
 func TestServer(t *testing.T) {
-	go NewServer()
+	NewServer()
 
 	client, err := rpc.DialHTTP("tcp", "localhost:6060")
 	if err != nil {
