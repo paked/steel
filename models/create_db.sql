@@ -30,5 +30,18 @@ CREATE TABLE "assignments" (
 	`due`	INTEGER,
 	`created_by`	INTEGER
 );
+
+CREATE TABLE "classes" (
+    `id`    INTEGER PRIMARY KEY AUTOINCREMENT,
+    `name`  TEXT,
+    `description` TEXT,
+    `image_url` TEXT
+);
+
+CREATE TABLE "students" (
+    `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `user` INTEGER,
+    `class` INTEGER
+);
 ;
 COMMIT;
