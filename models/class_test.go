@@ -24,4 +24,13 @@ func TestClass(t *testing.T) {
 	if err == nil {
 		t.Error("Was able to add the same student twice to a class")
 	}
+
+	st, err := c.Students()
+	if err != nil {
+		t.Error("Could not get students in this class")
+	}
+
+	if len(st) != 1 {
+		t.Error("Wrong amount of students")
+	}
 }
