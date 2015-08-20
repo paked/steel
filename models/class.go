@@ -43,6 +43,26 @@ func (c *Class) AddUser(u User) error {
 	return err
 }
 
+func (c *Class) Invite(u User) (Student, error) {
+	s := Student{}
+
+	row := db.QueryRow("SELECT id FROM students WHERE user = ? AND class = ?", u.ID, c.ID)
+	err := row.Scan() // why does this work...
+	if err != sql.ErrNoRows {
+		return s, errors.New("That user is already in this class")
+	}
+
+	s = Student{
+		User:        u.ID,
+		Class:       c.ID,
+		Permissions: DefaultPermissions,
+	}
+
+	_, err = db.Exec("INSERT INTO students (user, class, permission_level) VALUES (?, ?, ?)", s.User, s.Class, s.Permissions)
+
+	return s, err
+}
+
 func (c *Class) Students() ([]User, error) {
 	var st []User
 	rows, err := db.Query("SELECT user FROM students WHERE class = ?", c.ID)
