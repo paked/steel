@@ -13,6 +13,7 @@ const (
 	AdminPermissions
 )
 
+// A user represents one account, but not the entity which is in a *class*
 type User struct {
 	ID           int64  `json:"id"`
 	Username     string `json:"username"`

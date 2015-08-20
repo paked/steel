@@ -41,6 +41,7 @@ CREATE TABLE "classes" (
 CREATE TABLE "students" (
     `id` INTEGER PRIMARY KEY AUTOINCREMENT,
     `user` INTEGER,
+    `permission_level` INTEGER,
     `class` INTEGER
 );
 ;
