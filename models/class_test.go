@@ -6,7 +6,7 @@ import (
 
 func TestClass(t *testing.T) {
 	u, err := RegisterUser("class_tester", "pw", "matt")
-	c, err := NewClass("My Class", "A class for learning JavaScript")
+	c, err := u.NewClass("My Class", "A class for learning JavaScript")
 	if err != nil {
 		t.Error("Could not create class:", err)
 	}

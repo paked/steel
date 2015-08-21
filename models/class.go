@@ -12,25 +12,6 @@ type Class struct {
 	Image       string
 }
 
-func NewClass(name, description string) (Class, error) {
-	c := Class{
-		Name:        name,
-		Description: description,
-	}
-
-	result, err := db.Exec("INSERT INTO classes (name, description) VALUES (?, ?)", c.Name, c.Description)
-	if err != nil {
-		return c, err
-	}
-
-	c.ID, err = result.LastInsertId()
-	if err != nil {
-		return c, err
-	}
-
-	return c, nil
-}
-
 func (c *Class) Invite(u User) (Student, error) {
 	s := Student{}
 
