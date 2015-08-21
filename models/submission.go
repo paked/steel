@@ -12,13 +12,6 @@ type Submission struct {
 	TeamName   string `json:"team_name"`
 }
 
-type SubmissionMember struct {
-	ID           int64 `json:"id"`
-	SubmissionID int64 `json:"submission"`
-	Assignment   int64 `json:"assignment"`
-	UserID       int64 `json:"user"`
-}
-
 func GetSubmission(id int64) (Submission, error) {
 	s := Submission{
 		ID: id,
