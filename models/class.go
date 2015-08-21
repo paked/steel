@@ -31,18 +31,6 @@ func NewClass(name, description string) (Class, error) {
 	return c, nil
 }
 
-func (c *Class) AddUser(u User) error {
-	row := db.QueryRow("SELECT id FROM students WHERE user = ? AND class = ?", u.ID, c.ID)
-	err := row.Scan() // why does this work...
-	if err != sql.ErrNoRows {
-		return errors.New("That user is already in this class")
-	}
-
-	_, err = db.Exec("INSERT INTO students (user, class) VALUES (?, ?)", u.ID, c.ID)
-
-	return err
-}
-
 func (c *Class) Invite(u User) (Student, error) {
 	s := Student{}
 
@@ -63,9 +51,9 @@ func (c *Class) Invite(u User) (Student, error) {
 	return s, err
 }
 
-func (c *Class) Students() ([]User, error) {
-	var st []User
-	rows, err := db.Query("SELECT user FROM students WHERE class = ?", c.ID)
+func (c *Class) Students() ([]Student, error) {
+	var st []Student
+	rows, err := db.Query("SELECT id, user, permission_level FROM students WHERE class = ?", c.ID)
 	if err != nil {
 		return st, err
 	}
@@ -73,19 +61,16 @@ func (c *Class) Students() ([]User, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var uid int64
+		s := Student{
+			Class: c.ID,
+		}
 
-		err = rows.Scan(&uid)
+		err = rows.Scan(&s.ID, &s.User, &s.Permissions)
 		if err != nil {
 			return st, err
 		}
 
-		u, err := GetUserByID(uid)
-		if err != nil {
-			return st, err
-		}
-
-		st = append(st, u)
+		st = append(st, s)
 	}
 
 	return st, nil

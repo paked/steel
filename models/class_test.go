@@ -15,19 +15,31 @@ func TestClass(t *testing.T) {
 		t.Error("Incorrect information in class")
 	}
 
-	err = c.AddUser(u)
+	s, err := c.Invite(u)
 	if err != nil {
 		t.Error("Could not add user")
 	}
 
-	err = c.AddUser(u)
+	if s.User != u.ID {
+		t.Error("Wrong user ID")
+	}
+
+	if s.Class != c.ID {
+		t.Error("Wrong class ID")
+	}
+
+	if s.Permissions != DefaultPermissions {
+		t.Error("Wrong permissions level")
+	}
+
+	s, err = c.Invite(u)
 	if err == nil {
 		t.Error("Was able to add the same student twice to a class")
 	}
 
 	st, err := c.Students()
 	if err != nil {
-		t.Error("Could not get students in this class")
+		t.Error("Could not get students in this class", err)
 	}
 
 	if len(st) != 1 {
