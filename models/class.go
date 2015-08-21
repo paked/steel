@@ -27,7 +27,9 @@ func (c *Class) Invite(u User) (Student, error) {
 		Permissions: DefaultPermissions,
 	}
 
-	_, err = db.Exec("INSERT INTO students (user, class, permission_level) VALUES (?, ?, ?)", s.User, s.Class, s.Permissions)
+	res, err := db.Exec("INSERT INTO students (user, class, permission_level) VALUES (?, ?, ?)", s.User, s.Class, s.Permissions)
+
+	s.ID, err = res.LastInsertId()
 
 	return s, err
 }

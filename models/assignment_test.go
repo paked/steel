@@ -6,15 +6,25 @@ import (
 	"time"
 )
 
-func TestCAssignments(t *testing.T) {
+func TestAssignments(t *testing.T) {
 	u, err := RegisterUser("assignment_test", "pw", "mat")
 	if err != nil {
 		t.Error(err)
 	}
 
-	u.MakeAdmin()
+	c, err := u.NewClass("assignments_test", "testing assignments")
+	if err != nil {
+		t.Error(err)
+	}
 
-	a, err := u.CreateAssignment("Test", "descritpion", "explanation")
+	s, err := c.Invite(u)
+	if err != nil {
+		t.Error(err)
+	}
+
+	s.MakeAdmin()
+
+	a, err := s.CreateAssignment("Test", "descritpion", "explanation")
 	if err != nil {
 		t.Error("Could not create Assignment: ", err)
 	}
@@ -23,29 +33,29 @@ func TestCAssignments(t *testing.T) {
 		t.Error("Assignment values were not set properly")
 	}
 
-	s, err := u.StartAssignment(a)
+	sub, err := s.StartAssignment(a)
 	if err != nil {
 		t.Error("Could not start assignment: ", err)
 	}
 
-	if s.TeamName != u.Username+"'s Assignment" {
+	if sub.TeamName != "Assignment" {
 		t.Error("Submission values were not correct")
 	}
 
-	err = s.Rename("My Submission")
+	err = sub.Rename("My Submission")
 	if err != nil {
 		t.Error("Could not rename submission")
 	}
 
-	if s.TeamName != "My Submission" {
+	if sub.TeamName != "My Submission" {
 		t.Error("Wrong submission name")
 	}
 
-	if sm, err := s.Members(); err != nil || len(sm) != 1 {
-		t.Error("Failed wrong amount of members (0)", len(sm))
+	if sm, err := sub.Members(); err != nil || len(sm) != 1 {
+		t.Error("Failed wrong amount of members (0)", len(sm), err)
 	}
 
-	err = s.AddMember(u)
+	err = sub.Invite(s)
 	if err == nil {
 		t.Error("Should have failed adding a user again")
 	}
@@ -55,13 +65,15 @@ func TestCAssignments(t *testing.T) {
 		t.Error(err)
 	}
 
-	err = s.AddMember(u2)
+	s2, err := c.Invite(u2)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if sm, err := s.Members(); err != nil || len(sm) != 2 {
-		t.Error("Failed wrong amount of members (1)")
+	err = sub.Invite(s2)
+
+	if sm, err := sub.Members(); err != nil || len(sm) != 2 {
+		t.Error("Failed wrong amount of members (1)", len(sm), err)
 	}
 
 	a.Delete()
@@ -72,22 +84,36 @@ func TestCAssignments(t *testing.T) {
 func TestDueAssignments(t *testing.T) {
 	u, err := RegisterUser("due_assignments_test", "go", "golang.com")
 	if err != nil {
-		panic(err)
+		t.Error(err)
 	}
 
-	u.MakeAdmin()
+	c, err := u.NewClass("due assignments class", "things")
+	if err != nil {
+		t.Error(err)
+	}
+
+	s, err := c.Invite(u)
+	if err != nil {
+		t.Error(err)
+	}
+
+	s.MakeAdmin()
 
 	for i := 0; i < 10; i++ {
-		a, _ := u.CreateAssignment("Test", "testing", "terster")
+		a, err := s.CreateAssignment("Test", "testing", "terster")
+		if err != nil {
+			t.Error(err)
+		}
+
 		defer a.Delete()
 	}
 
 	tm := time.Now()
 
-	as, err := u.DueAssignments(tm)
+	as, err := s.DueAssignments(tm)
 
 	if len(as) != 10 {
-		t.Errorf("Expecting 10 assignments after %v got %v", tm.UnixNano(), len(as))
+		t.Errorf("Expecting 10 assignments after %v got %v err: %v", tm.UnixNano(), len(as), err)
 	}
 
 	u.Delete()
@@ -100,9 +126,21 @@ func TestAllSubmissions(t *testing.T) {
 		t.Fail()
 	}
 
-	u.MakeAdmin()
+	c, err := u.NewClass("xyz", "xxx")
+	if err != nil {
+		t.Error("User could not be registered", err)
+		t.Fail()
+	}
 
-	a, err := u.CreateAssignment("A", "desc", "expl")
+	s, err := c.Invite(u)
+	if err != nil {
+		t.Error("User could not be registered", err)
+		t.Fail()
+	}
+
+	s.MakeAdmin()
+
+	a, err := s.CreateAssignment("A", "desc", "expl")
 	if err != nil {
 		t.Error("Could not make assignment")
 	}
@@ -116,7 +154,13 @@ func TestAllSubmissions(t *testing.T) {
 			t.Fail()
 		}
 
-		s, err := u.StartAssignment(a)
+		stu, err := c.Invite(u)
+		if err != nil {
+			t.Error("User could not be invited", err)
+			t.Fail()
+		}
+
+		s, err := stu.StartAssignment(a)
 		if err != nil {
 			t.Error("Could not start assignment")
 		}

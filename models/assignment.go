@@ -8,6 +8,7 @@ type Assignment struct {
 	Description string    `json:"description"`
 	Explanation string    `json:"explanation"`
 	Due         time.Time `json:"due"`
+	Class       int64     `json:"class"`
 }
 
 func (a *Assignment) Delete() error {
@@ -23,8 +24,8 @@ func GetAssignment(id int64) (Assignment, error) {
 
 	var unixTime int64
 
-	row := db.QueryRow("SELECT name, description, explanation, due FROM assignments WHERE id = ?", a.ID)
-	err := row.Scan(&a.Name, &a.Description, &a.Explanation, &unixTime)
+	row := db.QueryRow("SELECT name, description, explanation, due, class FROM assignments WHERE id = ?", a.ID)
+	err := row.Scan(&a.Name, &a.Description, &a.Explanation, &unixTime, &a.Class)
 	if err != nil {
 		return a, err
 	}

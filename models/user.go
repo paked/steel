@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -122,77 +121,6 @@ func (u *User) updatePermissions(level int) error {
 	u.Permissions = level
 
 	return nil
-}
-
-func (u *User) CreateAssignment(name, description, explanation string) (Assignment, error) {
-	a := Assignment{}
-
-	if u.Permissions != AdminPermissions {
-		return a, errors.New("Incorrect permissions")
-	}
-
-	a = Assignment{
-		Name:        name,
-		Description: description,
-		Explanation: explanation,
-		Due:         time.Now(),
-	}
-
-	result, err := db.Exec("INSERT INTO assignments (name, description, explanation, due, created_by) VALUES (?, ?, ?, ?, ?)", a.Name, a.Description, a.Explanation, a.Due.UnixNano(), u.ID)
-	if err != nil {
-		return a, err
-	}
-
-	a.ID, err = result.LastInsertId()
-
-	return a, err
-}
-
-func (u *User) StartAssignment(a Assignment) (Submission, error) {
-	s := Submission{
-		TeamName:   u.Username + "'s Assignment",
-		Assignment: a.ID,
-	}
-
-	res, err := db.Exec("INSERT INTO submissions (team_name, assignment) VALUES (?, ?)", s.TeamName, s.Assignment)
-	if err != nil {
-		return s, err
-	}
-
-	s.ID, err = res.LastInsertId()
-	if err != nil {
-		return s, err
-	}
-
-	err = s.AddMember(*u)
-
-	return s, err
-}
-
-func (u *User) DueAssignments(before time.Time) ([]Assignment, error) {
-	var as []Assignment
-	rows, err := db.Query("SELECT id, name, description, explanation, due FROM assignments WHERE due < ?", before.UnixNano())
-	if err != nil {
-		return as, err
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		a := Assignment{}
-		var unixTime int64
-
-		err := rows.Scan(&a.ID, &a.Name, &a.Description, &a.Explanation, &unixTime)
-		if err != nil {
-			return as, err
-		}
-
-		a.Due = time.Unix(0, unixTime)
-
-		as = append(as, a)
-	}
-
-	return as, nil
 }
 
 func (u *User) NewClass(name, description string) (Class, error) {

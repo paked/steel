@@ -10,7 +10,7 @@ CREATE TABLE "users" (
 
 CREATE TABLE "team_members" (
 	`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
-	`user`	INTEGER,
+	`student`	INTEGER,
 	`submission`	INTEGER,
 	`assignment`	INTEGER
 );
@@ -28,7 +28,8 @@ CREATE TABLE "assignments" (
 	`description`	TEXT,
 	`explanation`	TEXT,
 	`due`	INTEGER,
-	`created_by`	INTEGER
+	`created_by`	INTEGER,
+    `class` INTEGER
 );
 
 CREATE TABLE "classes" (

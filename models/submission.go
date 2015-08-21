@@ -30,24 +30,24 @@ func GetSubmission(id int64) (Submission, error) {
 	return s, err
 }
 
-func (s *Submission) AddMember(u User) error {
-	row := db.QueryRow("SELECT user FROM team_members WHERE assignment = ? AND user = ?", s.Assignment, u.ID)
+func (sub *Submission) Invite(s Student) error {
+	row := db.QueryRow("SELECT student FROM team_members WHERE student = ? AND submission = ?", s.ID, sub.ID)
 
 	var uid *int64
-	err := row.Scan(uid)
 
+	err := row.Scan(uid)
 	if uid != nil || (err != nil && err != sql.ErrNoRows) {
 		return errors.New("This user is alreayd a member of another team")
 	}
 
-	_, err = db.Exec("INSERT INTO team_members (submission, user, assignment) VALUES (?, ?, ?)", s.ID, u.ID, s.Assignment)
+	_, err = db.Exec("INSERT INTO team_members (student, submission, assignment) VALUES (?, ?, ?)", s.ID, sub.ID, sub.Assignment)
 
 	return err
 }
 
-func (s *Submission) Members() ([]User, error) {
-	var us []User
-	rows, err := db.Query("SELECT user FROM team_members WHERE submission = ? AND assignment = ?", s.ID, s.Assignment)
+func (sub *Submission) Members() ([]Student, error) {
+	var us []Student
+	rows, err := db.Query("SELECT student FROM team_members WHERE submission = ? ", sub.ID)
 	if err != nil {
 		return us, err
 	}
@@ -56,13 +56,17 @@ func (s *Submission) Members() ([]User, error) {
 
 	for rows.Next() {
 		var uid int64
-		rows.Scan(&uid)
-		u, err := GetUserByID(uid)
+		err = rows.Scan(&uid)
 		if err != nil {
 			return us, err
 		}
 
-		us = append(us, u)
+		s, err := GetStudentByID(uid)
+		if err != nil {
+			return us, err
+		}
+
+		us = append(us, s)
 	}
 
 	return us, nil
