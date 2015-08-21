@@ -40,3 +40,43 @@ func TestStudentCreation(t *testing.T) {
 	}
 
 }
+
+func TestStudentPermissions(t *testing.T) {
+	u, err := RegisterUser("student_permission", "x", "y")
+	if err != nil {
+		t.Error(err)
+	}
+
+	c, err := u.NewClass("Permission", "Creation")
+	if err != nil {
+		t.Error(err)
+	}
+
+	s, err := c.Invite(u)
+	if err != nil {
+		t.Error("Could not invite user", err)
+	}
+
+	if s.Permissions != DefaultPermissions {
+		t.Error("Incorrect permissions")
+	}
+
+	err = s.MakeAdmin()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if s.Permissions != AdminPermissions {
+		t.Error("pemrissinos ")
+	}
+
+	sR, err := GetStudentByID(s.ID)
+	if err != nil {
+		t.Error("Could not get student")
+	}
+
+	if s.Permissions != sR.Permissions {
+		t.Error("Incorrect remote permissions")
+	}
+
+}
