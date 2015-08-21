@@ -6,10 +6,10 @@ import (
 )
 
 type Class struct {
-	ID          int64
-	Name        string
-	Description string
-	Image       string
+	ID          int64  `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Image       string `json:"image_url"`
 }
 
 func (c *Class) Invite(u User) (Student, error) {

@@ -19,10 +19,10 @@ func GetStudentByID(id int64) (Student, error) {
 
 // Student represents a student who is taking place in a class
 type Student struct {
-	ID          int64
-	User        int64
-	Permissions int
-	Class       int64
+	ID          int64 `json:"id"`
+	User        int64 `json:"user"`
+	Permissions int   `json:"permission"`
+	Class       int64 `json:"class"`
 }
 
 func (s *Student) Delete() error {
