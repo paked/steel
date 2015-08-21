@@ -16,6 +16,14 @@ These are my thoughts relating to this project.
 * NEEDS TO BE FLUID
 * Possible usage at hackEDU
     * easy applicable model
+    * works with __people__
 * I want myself to use it for managing classes
 * I need it to not make me want to cry when i look at it
+* Pluggable
+* Motivated kids should be able to help other kids
+* Encourage interactions on other forms of media
+    * slack integration
+    * facebook group intergration
+    * twitter and instagram hash tagss
+* Easy terminology for beginners to understand
 
