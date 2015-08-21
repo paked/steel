@@ -26,12 +26,8 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/user", GetUserHandler).Methods("GET")
-	router.HandleFunc("/user/admin", GetPrivileges).Methods("GET")
 	router.HandleFunc("/user/login", LoginHandler).Methods("POST")
 	router.HandleFunc("/user/register", RegisterHandler).Methods("POST")
-	router.HandleFunc("/assignments", restrict(CreateAssignmentHandler)).Methods("POST")
-
-	router.Handle("/cake", restrict(GiveCakeHandler))
 
 	n := negroni.New()
 	n.Use(negroni.NewStatic(http.Dir("static")))
@@ -41,26 +37,6 @@ func main() {
 	models.InitDB()
 
 	http.ListenAndServe("localhost:8080", n)
-}
-
-func GetPrivileges(w http.ResponseWriter, r *http.Request) {
-	c := communicator.New(w)
-	sid := r.FormValue("id")
-
-	var id int64
-	fmt.Sscanf(sid, "%d", &id)
-
-	u, err := models.GetUserByID(id)
-	if err != nil {
-		c.Fail("Could not get user by ID")
-		return
-	}
-
-	c.OKWithData("Is the user admin?", u.IsAdmin())
-}
-
-func GiveCakeHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
-	fmt.Fprintln(w, "*cake*")
 }
 
 func GetUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -171,7 +147,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	c.OKWithData("Successfully registered that user", u)
 }
 
-func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+/*func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 	c := communicator.New(w)
 
 	id, ok := t.Claims["id"].(int64)
@@ -202,7 +178,7 @@ func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Toke
 	}
 
 	c.OKWithData("Here is the assignment", a)
-}
+}*/
 
 func restrict(fn func(http.ResponseWriter, *http.Request, *jwt.Token)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
