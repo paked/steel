@@ -95,34 +95,6 @@ func (u *User) Delete() error {
 	return err
 }
 
-func (u *User) IsAdmin() bool {
-	if u.Permissions == AdminPermissions {
-		return true
-	}
-
-	return false
-}
-
-func (u *User) MakeAdmin() error {
-	return u.updatePermissions(AdminPermissions)
-}
-
-func (u *User) DemoteAdmin() error {
-	return u.updatePermissions(DefaultPermissions)
-}
-
-func (u *User) updatePermissions(level int) error {
-	_, err := db.Exec("UPDATE users SET permission_level=? WHERE id = ?", level, u.ID)
-
-	if err != nil {
-		return err
-	}
-
-	u.Permissions = level
-
-	return nil
-}
-
 func (u *User) NewClass(name, description string) (Class, error) {
 	c := Class{
 		Name:        name,

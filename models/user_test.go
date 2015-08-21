@@ -52,43 +52,6 @@ func TestLogin(t *testing.T) {
 	}
 }
 
-func TestAdmin(t *testing.T) {
-	u, _ := GetUser("username", "paked")
-	if u.Permissions != DefaultPermissions {
-		t.Error("Initial permissions are not default!")
-	}
-
-	err := u.MakeAdmin()
-	if err != nil {
-		t.Error("Error creating admin: ", err)
-	}
-
-	if u.Permissions != AdminPermissions {
-		t.Error("Local permissions have not been changed")
-	}
-
-	// pull user from database
-	u, _ = GetUser("username", "paked")
-	if u.Permissions != AdminPermissions {
-		t.Error("Wrong permissions in DB")
-	}
-
-	err = u.DemoteAdmin()
-	if err != nil {
-		t.Error("Could not demote admin...", err)
-	}
-
-	if u.Permissions != DefaultPermissions {
-		t.Error("Local changes not made")
-	}
-
-	// pull user from database
-	u, _ = GetUser("username", "paked")
-	if u.Permissions != DefaultPermissions {
-		t.Error("Changes not in DB")
-	}
-}
-
 func TestDelete(t *testing.T) {
 	paked, _ := GetUser("username", "paked")
 	newbie, _ := GetUser("username", "newbie")
