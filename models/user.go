@@ -113,7 +113,6 @@ func (u *User) NewClass(name, description string) (Class, error) {
 	}
 
 	return c, nil
-
 }
 
 func checkCredentials(username, password string) error {
