@@ -29,7 +29,7 @@ These are my thoughts relating to this project.
 * Wiki for sharing information
 * Can we not use the word assignments...
 
-## jarvis
+## jarvis -- the code runner
 jarvis is the code runner portion of steel. It is designed to be dynamic and be easily modifyable and playable by even new students.
 
 * Handle ALL OF THE TEST SUITES
@@ -47,3 +47,14 @@ jarvis is the code runner portion of steel. It is designed to be dynamic and be 
     * Recognise errors which are being spewed out and how they are fixed
         * too complex for a multi-language system?
     * give tips to coders if they are coming across certain errors
+
+## ultron -- the plugin system
+ultron is the system which manages all of the integrations. An integration is a piece of code which adds *something* to the home bar. As well as this, they have access to the news feed and basic social functions. If they define the behaviour, interactions can be made inter-system.
+
+* RPC model 
+    * anything that supports RPC/JSON can be used to make a plugin
+    * out of process?
+* host your own
+    * some sort of connectivity API
+* use ours
+    * we have built some plugins to manage how steel works. You can enable or disable them as you wish.
