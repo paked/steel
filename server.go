@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -25,9 +26,11 @@ func main() {
 	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/user", GetUserHandler).Methods("GET")
-	router.HandleFunc("/user/login", LoginHandler).Methods("POST")
-	router.HandleFunc("/user/register", RegisterHandler).Methods("POST")
+	router.HandleFunc("/users", GetUserHandler).Methods("GET")
+	router.HandleFunc("/users/login", LoginHandler).Methods("POST")
+	router.HandleFunc("/users/register", RegisterHandler).Methods("POST")
+	router.HandleFunc("/classes", restrict(CreateClassHandler)).Methods("POST")
+	router.HandleFunc("/classes", restrict(GetClassHandler)).Methods("GET")
 
 	n := negroni.New()
 	n.Use(negroni.NewStatic(http.Dir("static")))
@@ -37,6 +40,38 @@ func main() {
 	models.InitDB()
 
 	http.ListenAndServe("localhost:8080", n)
+}
+
+func CreateClassHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+
+	u, err := getUserFromToken(t)
+	if err != nil {
+		c.Fail("Unable to get your user")
+		return
+	}
+
+	name := r.FormValue("name")
+	description := r.FormValue("description")
+
+	if name == "" || description == "" {
+		c.Fail("Invalide data")
+		return
+	}
+
+	class, err := u.NewClass(name, description)
+	if err != nil {
+		c.Fail("Could not create class")
+		return
+	}
+
+	c.OKWithData("Here is your class", class)
+}
+
+func GetClassHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+
+	c.OK("hello")
 }
 
 func GetUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -211,4 +246,15 @@ func readPrivateKey() ([]byte, error) {
 	privateKey, e := ioutil.ReadFile("keys/app.rsa")
 
 	return privateKey, e
+}
+
+func getUserFromToken(t *jwt.Token) (models.User, error) {
+	fid, ok := t.Claims["id"].(float64)
+	if !ok {
+		return models.User{}, errors.New("Could not get user from token")
+	}
+
+	id := int64(fid)
+
+	return models.GetUserByID(id)
 }
