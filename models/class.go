@@ -5,6 +5,19 @@ import (
 	"errors"
 )
 
+func GetClassByID(id int64) (Class, error) {
+	c := Class{}
+
+	row := db.QueryRow("SELECT id, name, description, image_url FROM classes WHERE id = ?", id)
+
+	err := row.Scan(&c.ID, &c.Name, &c.Description, &c.Image)
+	if err != nil {
+		return c, err
+	}
+
+	return c, nil
+}
+
 type Class struct {
 	ID          int64  `json:"id"`
 	Name        string `json:"name"`

@@ -15,6 +15,23 @@ func TestClass(t *testing.T) {
 		t.Error("Incorrect information in class")
 	}
 
+	cT, err := GetClassByID(c.ID)
+	if err != nil {
+		t.Error("Could not get class by ID", err)
+	}
+
+	if cT.ID != c.ID {
+		t.Error("Not the same ID")
+	}
+
+	if cT.Name != c.Name {
+		t.Error("Not the same name")
+	}
+
+	if cT.Description != c.Description {
+		t.Error("Not the same description")
+	}
+
 	s, err := c.Invite(u)
 	if err != nil {
 		t.Error("Could not add user")

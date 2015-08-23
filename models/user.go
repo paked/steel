@@ -99,9 +99,10 @@ func (u *User) NewClass(name, description string) (Class, error) {
 	c := Class{
 		Name:        name,
 		Description: description,
+		Image:       "",
 	}
 
-	result, err := db.Exec("INSERT INTO classes (name, description) VALUES (?, ?)", c.Name, c.Description)
+	result, err := db.Exec("INSERT INTO classes (name, description, image_url) VALUES (?, ?, ?)", c.Name, c.Description, c.Image)
 	if err != nil {
 		return c, err
 	}
