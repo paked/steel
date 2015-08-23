@@ -10,15 +10,26 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"github.com/paked/configure"
 	"github.com/paked/gerrycode/communicator"
 	"github.com/paked/steel/models"
 )
 
 var (
 	pkey []byte
+
+	conf   = configure.New()
+	dbFile = conf.String("db", "database.db", "path to the db")
 )
 
+func init() {
+	conf.Use(configure.NewFlag())
+	conf.Use(configure.NewJSONFromFile("config.json"))
+}
+
 func main() {
+	conf.Parse()
+
 	var err error
 	pkey, err = readPrivateKey()
 	if err != nil {
@@ -37,7 +48,7 @@ func main() {
 	n.Use(negroni.NewLogger())
 	n.UseHandler(router)
 
-	models.InitDB()
+	models.InitDB(*dbFile)
 
 	http.ListenAndServe("localhost:8080", n)
 }

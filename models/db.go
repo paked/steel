@@ -35,9 +35,9 @@ func deleteTestDB() {
 	os.Remove("tst.db")
 }
 
-func InitDB() {
+func InitDB(file string) {
 	var err error
-	db, err = sql.Open("sqlite3", "db.db")
+	db, err = sql.Open("sqlite3", file)
 	if err != nil {
 		panic(err)
 	}
