@@ -71,3 +71,17 @@ func (c *Class) Students() ([]Student, error) {
 
 	return st, nil
 }
+
+func (c *Class) Student(u User) (Student, error) {
+	s := Student{
+		Class: c.ID,
+		User:  u.ID,
+	}
+
+	row := db.QueryRow("SELECT id, user, permission_level FROM students WHERE class = ? AND user = ?", c.ID, u.ID)
+
+	err := row.Scan(&s.ID, &s.User, &s.Permissions)
+
+	return s, err
+
+}

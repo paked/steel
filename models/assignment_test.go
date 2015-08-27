@@ -17,12 +17,20 @@ func TestAssignments(t *testing.T) {
 		t.Error(err)
 	}
 
-	s, err := c.Invite(u)
-	if err != nil {
-		t.Error(err)
+	_, err = c.Invite(u)
+	if err == nil {
+		t.Error("Already in class")
 	}
 
-	s.MakeAdmin()
+	s, err := c.Student(u)
+	if err != nil {
+		t.Error("That student doesnt exist:", err)
+	}
+
+	err = s.MakeAdmin()
+	if err != nil {
+		t.Error("COuld not make admin", err)
+	}
 
 	a, err := s.CreateAssignment("Test", "descritpion", "explanation")
 	if err != nil {
@@ -92,7 +100,7 @@ func TestDueAssignments(t *testing.T) {
 		t.Error(err)
 	}
 
-	s, err := c.Invite(u)
+	s, err := c.Student(u)
 	if err != nil {
 		t.Error(err)
 	}
@@ -128,14 +136,12 @@ func TestAllSubmissions(t *testing.T) {
 
 	c, err := u.NewClass("xyz", "xxx")
 	if err != nil {
-		t.Error("User could not be registered", err)
-		t.Fail()
+		t.Error("Class could not be registered", err)
 	}
 
-	s, err := c.Invite(u)
+	s, err := c.Student(u)
 	if err != nil {
-		t.Error("User could not be registered", err)
-		t.Fail()
+		t.Error("User could not be retrieved", err)
 	}
 
 	s.MakeAdmin()

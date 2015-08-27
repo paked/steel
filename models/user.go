@@ -112,7 +112,7 @@ func (u *User) NewClass(name, description string) (Class, error) {
 		return c, err
 	}
 
-	// _, err = c.Invite(u)
+	_, err = c.Invite(*u)
 
 	return c, err
 }

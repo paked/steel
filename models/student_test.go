@@ -13,9 +13,9 @@ func TestStudentCreation(t *testing.T) {
 		t.Error(err)
 	}
 
-	s, err := c.Invite(u)
+	s, err := c.Student(u)
 	if err != nil {
-		t.Error("Could not invite user", err)
+		t.Error("Could not retrieve user", err)
 	}
 
 	if s.User != u.ID {
@@ -52,9 +52,9 @@ func TestStudentPermissions(t *testing.T) {
 		t.Error(err)
 	}
 
-	s, err := c.Invite(u)
+	s, err := c.Student(u)
 	if err != nil {
-		t.Error("Could not invite user", err)
+		t.Error("Could not retrieve user", err)
 	}
 
 	if s.Permissions != DefaultPermissions {

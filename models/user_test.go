@@ -73,14 +73,9 @@ func TestGetClasses(t *testing.T) {
 	}
 
 	for i := 0; i < 10; i++ {
-		c, err := u.NewClass(fmt.Sprintf("class %v", i), "x")
+		_, err := u.NewClass(fmt.Sprintf("class %v", i), "x")
 		if err != nil {
 			t.Error("Could not create class")
-		}
-
-		_, err = c.Invite(u)
-		if err != nil {
-			t.Error("Could not invite to class")
 		}
 	}
 
@@ -90,17 +85,11 @@ func TestGetClasses(t *testing.T) {
 	}
 
 	for i := 0; i < 10; i++ {
-		c, err := u.NewClass(fmt.Sprintf("other class %v", i), "x")
+		c, err := u2.NewClass(fmt.Sprintf("other class %v", i), "x")
 		if err != nil {
 			t.Error("Could not create class")
 		}
-
 		_, err = c.Invite(u)
-		if err != nil {
-			t.Error("could not invite to class ")
-		}
-
-		_, err = c.Invite(u2)
 		if err != nil {
 			t.Error("Could not invite to class")
 		}

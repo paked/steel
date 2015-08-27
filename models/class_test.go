@@ -32,9 +32,9 @@ func TestClass(t *testing.T) {
 		t.Error("Not the same description")
 	}
 
-	s, err := c.Invite(u)
+	s, err := c.Student(u)
 	if err != nil {
-		t.Error("Could not add user")
+		t.Error("Could not get user")
 	}
 
 	if s.User != u.ID {
