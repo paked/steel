@@ -45,7 +45,7 @@ func TestClass(t *testing.T) {
 		t.Error("Wrong class ID")
 	}
 
-	if s.Permissions != DefaultPermissions {
+	if s.Permissions != AdminPermissions {
 		t.Error("Wrong permissions level")
 	}
 

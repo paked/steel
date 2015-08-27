@@ -26,7 +26,7 @@ func TestStudentCreation(t *testing.T) {
 		t.Error("ClassID not correct")
 	}
 
-	if s.Permissions != DefaultPermissions {
+	if s.Permissions != AdminPermissions {
 		t.Error("Normal permissions are broken")
 	}
 
@@ -57,7 +57,7 @@ func TestStudentPermissions(t *testing.T) {
 		t.Error("Could not retrieve user", err)
 	}
 
-	if s.Permissions != DefaultPermissions {
+	if s.Permissions != AdminPermissions {
 		t.Error("Incorrect permissions")
 	}
 

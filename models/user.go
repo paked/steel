@@ -112,7 +112,12 @@ func (u *User) NewClass(name, description string) (Class, error) {
 		return c, err
 	}
 
-	_, err = c.Invite(*u)
+	s, err := c.Invite(*u)
+	if err != nil {
+		return c, err
+	}
+
+	err = s.MakeAdmin()
 
 	return c, err
 }
