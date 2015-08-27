@@ -112,7 +112,35 @@ func (u *User) NewClass(name, description string) (Class, error) {
 		return c, err
 	}
 
-	return c, nil
+	// _, err = c.Invite(u)
+
+	return c, err
+}
+
+func (u *User) Classes() ([]Class, error) {
+	cs := []Class{}
+
+	rows, err := db.Query("SELECT class FROM students WHERE user = ?", u.ID)
+	if err != nil {
+		return cs, err
+	}
+
+	for rows.Next() {
+		var id int64
+		err = rows.Scan(&id)
+		if err != nil {
+			return cs, err
+		}
+
+		class, err := GetClassByID(id)
+		if err != nil {
+			return cs, err
+		}
+
+		cs = append(cs, class)
+	}
+
+	return cs, nil
 }
 
 func checkCredentials(username, password string) error {

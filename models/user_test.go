@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"os"
 	"testing"
 )
@@ -62,5 +63,64 @@ func TestDelete(t *testing.T) {
 
 	if err := newbie.Delete(); err != nil {
 		t.Error("Could not delete newbie")
+	}
+}
+
+func TestGetClasses(t *testing.T) {
+	u, err := RegisterUser("get_classes_test", "x", "zz")
+	if err != nil {
+		t.Error("Could not register user")
+	}
+
+	for i := 0; i < 10; i++ {
+		c, err := u.NewClass(fmt.Sprintf("class %v", i), "x")
+		if err != nil {
+			t.Error("Could not create class")
+		}
+
+		_, err = c.Invite(u)
+		if err != nil {
+			t.Error("Could not invite to class")
+		}
+	}
+
+	u2, err := RegisterUser("get_classes_test_second", "x", "zz")
+	if err != nil {
+		t.Error("Could not register second user")
+	}
+
+	for i := 0; i < 10; i++ {
+		c, err := u.NewClass(fmt.Sprintf("other class %v", i), "x")
+		if err != nil {
+			t.Error("Could not create class")
+		}
+
+		_, err = c.Invite(u)
+		if err != nil {
+			t.Error("could not invite to class ")
+		}
+
+		_, err = c.Invite(u2)
+		if err != nil {
+			t.Error("Could not invite to class")
+		}
+	}
+
+	cs, err := u2.Classes()
+	if err != nil {
+		t.Error("Could not get classes")
+	}
+
+	if len(cs) != 10 {
+		t.Error("Wrong amount of classes wanted 10, got", len(cs))
+	}
+
+	cs, err = u.Classes()
+	if err != nil {
+		t.Error("Could not get classes", err)
+	}
+
+	if len(cs) != 20 {
+		t.Error("Wrong amount of classes wanted 20, got ", len(cs))
 	}
 }
