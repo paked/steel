@@ -10,6 +10,13 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/personal_assignment.html',
             controller: 'PersonalAssignmentCtrl'
         }).
+        when('/class/add', {
+            templateUrl: 'templates/add_class.html',
+            controller: 'AddClassCtrl'
+        }).
+        when('/classes/:id', {
+            controller: 'ClassCtrl'
+        }).
         when('/sandbox', {
             templateUrl: 'templates/sandbox.html',
             controller: 'SandboxCtrl'
@@ -116,6 +123,30 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
     u.loggedIn();
 
     return u;
+}]);
+
+app.controller('AddClassCtrl', ['$scope', '$http', '$location', 'user', function($scope, $http, $location, user) {
+    $scope.go = function() {
+        var name = $scope.name;
+        var description = $scope.description;
+
+        if (!name || !description) {
+            return;
+        }
+
+        $http.post('/classes?access_token=' + user.token + '&name=' + name + '&description=' + description)
+            .then(function(resp) {
+                if (resp.data.status.error) {
+                    console.log("COULD NOT CREATE NEW CLASSES");
+                    console.log(resp);
+
+                    return;
+                }
+
+                $location.path('/classes/' + resp.data.data.id);
+            });
+    }
+
 }]);
 
 app.controller('AdminCtrl', ['$scope', '$http', '$location', 'user', function($scope, $http, $location, user) {
