@@ -62,7 +62,7 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
             $rootScope.$broadcast('user.update');
         },
         auth: function(method, username, password, email)  {
-            var url = '/user/' + method + '?username=' + username + '&password=' + password + '&email=' + email;
+            var url = '/users/' + method + '?username=' + username + '&password=' + password + '&email=' + email;
             console.log('url: ', url);
 
             $http.post(url).
@@ -83,7 +83,7 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
                 });
         },
         loggedIn: function() {
-            $http.get('/user?access_token=' + u.token).
+            $http.get('/users?access_token=' + u.token).
                 then(function(resp) {
                     if (resp.data.status.error) {
                         $location.path('/auth/login');
@@ -111,7 +111,6 @@ app.controller('AdminCtrl', ['$scope', '$http', '$location', 'user', function($s
 }]);
 
 app.controller('HeaderCtrl', ['$scope', 'user', '$location', function($scope, user, $location) {
-
     $scope.loggedIn = false;
     $scope.user = undefined;
 
