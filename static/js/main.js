@@ -10,12 +10,9 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/personal_assignment.html',
             controller: 'PersonalAssignmentCtrl'
         }).
-        when('/class/add', {
+        when('/class/add', { // move this to /classes/
             templateUrl: 'templates/add_class.html',
             controller: 'AddClassCtrl'
-        }).
-        when('/classes/:id', {
-            controller: 'ClassCtrl'
         }).
         when('/classes/:class_id/sandbox', {
             templateUrl: 'templates/sandbox.html',
@@ -65,6 +62,7 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
         token: localStorage.token,
         admin: false,
         classes: [],
+        classID: undefined,
         setToken: function(t) {
             console.log('changed token to:', t);
             u.token = t;
@@ -120,6 +118,10 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
                     u.classes = resp.data.data;
                     $rootScope.$broadcast('user.update');
                 });
+        },
+        setClass: function(i) {
+            u.classID = i;
+            $rootScope.$broadcast('user.update');
         }
     };
 
@@ -162,10 +164,13 @@ app.controller('AdminCtrl', ['$scope', '$http', '$location', 'user', function($s
 app.controller('HeaderCtrl', ['$scope', 'user', '$location', function($scope, user, $location) {
     $scope.loggedIn = false;
     $scope.user = undefined;
+    $scope.inClass = false;
 
     $scope.$on('user.update', function(evt) {
         $scope.user = user;
         $scope.loggedIn = true;
+        $scope.inClass = user.classID !== undefined; // true;
+        console.log(user.classID);
     });
 }]);
 
@@ -235,7 +240,9 @@ app.controller('AssignmentsCtrl', ['$scope', '$http', '$routeParams', function($
     $scope.selected = $scope.tasks[index - 1];
 }]);
 
-app.controller('FeedCtrl', ['$scope', '$http', function($scope, $http) {
+app.controller('FeedCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
+    user.setClass($routeParams.class_id);
+
     $scope.dueTasks = [
         {
             "name": "Funny Strings",
