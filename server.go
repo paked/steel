@@ -41,7 +41,7 @@ func main() {
 	router.HandleFunc("/users/login", LoginHandler).Methods("POST")
 	router.HandleFunc("/users/register", RegisterHandler).Methods("POST")
 	router.HandleFunc("/classes", restrict(CreateClassHandler)).Methods("POST")
-	router.HandleFunc("/classes", restrict(GetClassHandler)).Methods("GET")
+	router.HandleFunc("/classes", restrict(GetClassesHandler)).Methods("GET")
 
 	n := negroni.New()
 	n.Use(negroni.NewStatic(http.Dir("static")))
@@ -79,10 +79,22 @@ func CreateClassHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 	c.OKWithData("Here is your class", class)
 }
 
-func GetClassHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+func GetClassesHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 	c := communicator.New(w)
 
-	c.OK("hello")
+	u, err := getUserFromToken(t)
+	if err != nil {
+		c.Fail("Unable to get your user")
+		return
+	}
+
+	classes, err := u.Classes()
+	if err != nil {
+		c.Fail("Unable to get classes")
+		return
+	}
+
+	c.OKWithData("Here are your classes", classes)
 }
 
 func GetUserHandler(w http.ResponseWriter, r *http.Request) {
