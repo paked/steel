@@ -54,6 +54,7 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
         username: undefined,
         token: localStorage.token,
         admin: false,
+        classes: [],
         setToken: function(t) {
             console.log('changed token to:', t);
             u.token = t;
@@ -77,7 +78,7 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
                     u.username = username;
                     u.setToken(resp.data.data);
 
-                    $rootScope.$broadcast('user.logged_in')
+                    $rootScope.$broadcast('user.update');
 
                     $location.path('/');
                 });
@@ -93,9 +94,23 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
                     u.admin = resp.data.data.permissions == 1;
                     u.username  = resp.data.data.username;
 
-                    $rootScope.$broadcast('user.logged_in');
+                    u.classes(); 
+
+                    $rootScope.$broadcast('user.update');
                 });
-        } 
+        },
+        classes: function() {
+            $http.get('/classes?access_token=' + u.token)
+                .then(function(resp) {
+                    if (resp.data.status.error) {
+                        console.log("COULD NOT GET USERS");
+                        return;
+                    }
+
+                    u.classes = resp.data.data;
+                    $rootScope.$broadcast('user.update');
+                });
+        }
     };
 
     u.loggedIn();
@@ -114,7 +129,7 @@ app.controller('HeaderCtrl', ['$scope', 'user', '$location', function($scope, us
     $scope.loggedIn = false;
     $scope.user = undefined;
 
-    $scope.$on('user.logged_in', function(evt) {
+    $scope.$on('user.update', function(evt) {
         $scope.user = user;
         $scope.loggedIn = true;
     });
