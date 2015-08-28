@@ -2,11 +2,11 @@ var app = angular.module('steel', ['ngRoute', 'ui.codemirror']);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
-        when('/assignments/:id?', {
+        when('/classes/:class_id/assignments/:id?', {
             templateUrl: 'templates/assignments.html',
             controller: 'AssignmentsCtrl'
         }).
-        when('/assignments/:id/:team', {
+        when('/classes/:class_id/assignments/:id/:team', {
             templateUrl: 'templates/personal_assignment.html',
             controller: 'PersonalAssignmentCtrl'
         }).
@@ -17,11 +17,11 @@ app.config(['$routeProvider', function($routeProvider) {
         when('/classes/:id', {
             controller: 'ClassCtrl'
         }).
-        when('/sandbox', {
+        when('/classes/:class_id/sandbox', {
             templateUrl: 'templates/sandbox.html',
             controller: 'SandboxCtrl'
         }).
-        when('/admin', {
+        when('/classes/:class_id/admin', {
             templateUrl: 'templates/admin.html',
             controller: 'AdminCtrl'
         }).
@@ -35,9 +35,12 @@ app.config(['$routeProvider', function($routeProvider) {
         when('/register', {
             redirectTo: '/auth/register'
         }).
-        when('/', {
+        when('/classes/:class_id/', {
             templateUrl: 'templates/feed.html',
             controller: 'FeedCtrl'
+        }).
+        when('/', {
+            templateUrl: 'templates/hello.html'
         }).
         otherwise({
             redirectTo: '/'
