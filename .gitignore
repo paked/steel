@@ -3,4 +3,4 @@ static/lib
 keys/
 steel
 
-db.db
+database.db
