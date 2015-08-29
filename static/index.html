@@ -28,8 +28,8 @@
         <![endif]-->
     </head>
 
-    <body>
-        <nav class="navbar navbar-default navbar-static-top" ng-controller="HeaderCtrl">
+    <body ng-controller="WholeCtrl">
+        <nav class="navbar navbar-default navbar-static-top">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a href="#/" class="navbar-brand">Steel</a>
@@ -44,7 +44,7 @@
 
                     <ul class="nav navbar-nav navbar-right" ng-show="loggedIn">
                         <li class="dropdown">
-                            <a href="#/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Class <span class="caret"></span></a>
+                            <a ng-href="#/classes/{{user.classID}}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Class <span class="caret"></span></a>
 
                             <ul class="dropdown-menu">
                                 <li ng-repeat="class in user.classes"><a ng-href="#/classes/{{ class.id }}">{{ class.name }}</a></li>

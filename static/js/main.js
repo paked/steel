@@ -161,7 +161,7 @@ app.controller('AdminCtrl', ['$scope', '$http', '$location', 'user', function($s
     }
 }]);
 
-app.controller('HeaderCtrl', ['$scope', 'user', '$location', function($scope, user, $location) {
+app.controller('WholeCtrl', ['$rootScope', 'user', '$location', function($scope, user, $location) {
     $scope.loggedIn = false;
     $scope.user = undefined;
     $scope.inClass = false;
