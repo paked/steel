@@ -26,7 +26,7 @@
                     </div>
 
                     <div class="list-group">
-                        <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/classes/{{user.classID}}/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
+                        <a class="list-group-item" ng-repeat="task in dueTasks | limitTo: 5" ng-href="#/classes/{{user.classID}}/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
                     </div>                           
                 </div>
             </div>
@@ -40,7 +40,7 @@
                     </div>
 
                     <ul class="list-group">
-                        <a class="list-group-item" ng-repeat="task in dueTasks" ng-href="#/classes/{{user.classID}}/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
+                        <a class="list-group-item" ng-repeat="task in dueTasks | limitTo: 4" ng-href="#/classes/{{user.classID}}/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
                     </ul>                           
 
                     <div class="panel-footer">
