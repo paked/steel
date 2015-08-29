@@ -130,7 +130,8 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
     return u;
 }]);
 
-app.controller('AddClassCtrl', ['$scope', '$http', '$location', 'user', function($scope, $http, $location, user) {
+app.controller('AddClassCtrl', ['$scope', '$http', '$location', '$routeParams', 'user', function($scope, $http, $location, $routeParams, user) {
+    user.setClass($routeParams.class_id);
     $scope.go = function() {
         var name = $scope.name;
         var description = $scope.description;
@@ -154,7 +155,8 @@ app.controller('AddClassCtrl', ['$scope', '$http', '$location', 'user', function
 
 }]);
 
-app.controller('AdminCtrl', ['$scope', '$http', '$location', 'user', function($scope, $http, $location, user) {
+app.controller('AdminCtrl', ['$scope', '$http', '$location', '$routeParams', 'user', function($scope, $http, $location, $routeParams, user) {
+    user.setClass($routeParams.class_id);
     if (!user.admin) {
         $location.path('/');
         return;
@@ -189,7 +191,8 @@ app.controller('AuthCtrl', ['$scope', '$routeParams', '$http', '$location', 'use
     };
 }]);
 
-app.controller('SandboxCtrl', ['$scope', '$http', function($scope, $http) {
+app.controller('SandboxCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
+    user.setClass($routeParams.class_id);
     $scope.editorOpts = {
         lineWrapping : true,
         lineNumbers: true,
@@ -199,11 +202,12 @@ app.controller('SandboxCtrl', ['$scope', '$http', function($scope, $http) {
     };
 }]);
 
-app.controller('PersonalAssignmentCtrl', ['$scope', '$http', function($scope, $http) {
-
+app.controller('PersonalAssignmentCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
+    user.setClass($routeParams.class_id);
 }]);
 
-app.controller('AssignmentsCtrl', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+app.controller('AssignmentsCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
+    user.setClass($routeParams.class_id);
     var index = parseInt($routeParams.id) || 1;
 
     $scope.tasks = [
