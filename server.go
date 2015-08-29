@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/codegangsta/negroni"
@@ -42,6 +43,7 @@ func main() {
 	router.HandleFunc("/users/register", RegisterHandler).Methods("POST")
 	router.HandleFunc("/classes", restrict(CreateClassHandler)).Methods("POST")
 	router.HandleFunc("/classes", restrict(GetClassesHandler)).Methods("GET")
+	router.HandleFunc("/classes/{class_id}/assignments", restrict(CreateAssignmentHandler)).Methods("POST")
 
 	n := negroni.New()
 	n.Use(negroni.NewStatic(http.Dir("static")))
@@ -51,6 +53,50 @@ func main() {
 	models.InitDB(*dbFile)
 
 	http.ListenAndServe("localhost:8080", n)
+}
+
+func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+
+	name := r.FormValue("name")
+	description := r.FormValue("description")
+	explanation := r.FormValue("explanation")
+
+	if name == "" || description == "" || explanation == "" {
+		c.Fail("Invalid data")
+		return
+	}
+
+	vars := mux.Vars(r)
+	cID := vars["class_id"]
+
+	idI, err := strconv.Atoi(cID)
+	if err != nil {
+		c.Fail("Unable to parse that id")
+		return
+	}
+
+	id := int64(idI)
+
+	u, err := getUserFromToken(t)
+	if err != nil {
+		c.Fail("Unable to get user from token")
+		return
+	}
+
+	s, _, err := u.Class(id)
+	if err != nil {
+		c.Fail("Could not get class info")
+		return
+	}
+
+	a, err := s.CreateAssignment(name, description, explanation)
+	if err != nil {
+		c.Fail("Could not create assignmnet")
+		return
+	}
+
+	c.OKWithData("Here is your assignment", a)
 }
 
 func CreateClassHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
