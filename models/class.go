@@ -83,5 +83,4 @@ func (c *Class) Student(u User) (Student, error) {
 	err := row.Scan(&s.ID, &s.User, &s.Permissions)
 
 	return s, err
-
 }

@@ -246,8 +246,13 @@ app.controller('AssignmentsCtrl', ['$scope', '$http', '$routeParams', 'user', fu
 
 app.controller('FeedCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
     user.setClass($routeParams.class_id);
+    $http.get('/classes/' + user.classID + '/assignments/due?access_token=' + user.token)
+        .then(function(resp) {
+            $scope.dueTasks = resp.data.data;
+            console.log(resp);
+        });
 
-    $scope.dueTasks = [
+    /*$scope.dueTasks = [
         {
             "name": "Funny Strings",
             "id": 1,
@@ -268,7 +273,7 @@ app.controller('FeedCtrl', ['$scope', '$http', '$routeParams', 'user', function(
             "id": 4,
             "done": true
         }
-    ];
+    ];*/
 
     $scope.feedUpdates = [
         {
