@@ -44,6 +44,7 @@ func main() {
 	router.HandleFunc("/classes", restrict(CreateClassHandler)).Methods("POST")
 	router.HandleFunc("/classes", restrict(GetClassesHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/assignments", restrict(CreateAssignmentHandler)).Methods("POST")
+	router.HandleFunc("/classes/{class_id}/assignments/due", restrict(GetDueAssignments)).Methods("GET")
 
 	n := negroni.New()
 	n.Use(negroni.NewStatic(http.Dir("static")))
@@ -53,6 +54,48 @@ func main() {
 	models.InitDB(*dbFile)
 
 	http.ListenAndServe("localhost:8080", n)
+}
+
+func GetDueAssignments(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+
+	vars := mux.Vars(r)
+	cID := vars["class_id"]
+
+	idI, err := strconv.Atoi(cID)
+	if err != nil {
+		c.Fail("Unable to parse that id")
+		return
+	}
+
+	u, err := getUserFromToken(t)
+	if err != nil {
+		c.Fail("Unable to get user from token")
+		return
+	}
+
+	id := int64(idI)
+
+	s, _, err := u.Class(id)
+	if err != nil {
+		c.Fail("Could not get class info")
+		return
+	}
+	d, err := time.ParseDuration("168h")
+	if err != nil {
+		c.Fail("could not parse duration")
+		return
+	}
+
+	tm := time.Now().Add(d)
+
+	as, err := s.DueAssignments(tm)
+	if err != nil {
+		c.Fail("Could not get assignments")
+		return
+	}
+
+	c.OKWithData("Here are your assignments", as)
 }
 
 func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
