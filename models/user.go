@@ -148,6 +148,23 @@ func (u *User) Classes() ([]Class, error) {
 	return cs, nil
 }
 
+func (u *User) Class(id int64) (Student, Class, error) {
+	var (
+		c   Class
+		s   Student
+		err error
+	)
+
+	c, err = GetClassByID(id)
+	if err != nil {
+		return s, c, err
+	}
+
+	s, err = c.Student(*u)
+
+	return s, c, err
+}
+
 func checkCredentials(username, password string) error {
 	if username == "" {
 		return errors.New("Not a valid username")
