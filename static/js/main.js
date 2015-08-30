@@ -88,6 +88,8 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
 
                     $rootScope.$broadcast('user.update');
 
+                    u.classes();
+
                     $location.path('/');
                 });
         },
@@ -251,29 +253,6 @@ app.controller('FeedCtrl', ['$scope', '$http', '$routeParams', 'user', function(
             $scope.dueTasks = resp.data.data;
             console.log(resp);
         });
-
-    /*$scope.dueTasks = [
-        {
-            "name": "Funny Strings",
-            "id": 1,
-            "done": false
-        },
-        {
-            "name": "Reverse String",
-            "id": 2,
-            "done": false
-        },
-        {
-            "name": "Utopian Tree",
-            "id": 3,
-            "done": true
-        },
-        {
-            "name": "Print",
-            "id": 4,
-            "done": true
-        }
-    ];*/
 
     $scope.feedUpdates = [
         {
