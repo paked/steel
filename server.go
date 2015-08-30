@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
@@ -13,6 +12,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/paked/configure"
 	"github.com/paked/gerrycode/communicator"
+	"github.com/paked/restrict"
 	"github.com/paked/steel/models"
 )
 
@@ -31,20 +31,16 @@ func init() {
 func main() {
 	conf.Parse()
 
-	var err error
-	pkey, err = readPrivateKey()
-	if err != nil {
-		panic(err)
-	}
+	restrict.ReadCryptoKey("keys/app.rsa")
 
 	router := mux.NewRouter()
 	router.HandleFunc("/users", GetUserHandler).Methods("GET")
 	router.HandleFunc("/users/login", LoginHandler).Methods("POST")
 	router.HandleFunc("/users/register", RegisterHandler).Methods("POST")
-	router.HandleFunc("/classes", restrict(CreateClassHandler)).Methods("POST")
-	router.HandleFunc("/classes", restrict(GetClassesHandler)).Methods("GET")
-	router.HandleFunc("/classes/{class_id}/assignments", restrict(CreateAssignmentHandler)).Methods("POST")
-	router.HandleFunc("/classes/{class_id}/assignments/due", restrict(GetDueAssignments)).Methods("GET")
+	router.HandleFunc("/classes", restrict.R(CreateClassHandler)).Methods("POST")
+	router.HandleFunc("/classes", restrict.R(GetClassesHandler)).Methods("GET")
+	router.HandleFunc("/classes/{class_id}/assignments", restrict.R(CreateAssignmentHandler)).Methods("POST")
+	router.HandleFunc("/classes/{class_id}/assignments/due", restrict.R(GetDueAssignments)).Methods("GET")
 
 	n := negroni.New()
 	n.Use(negroni.NewStatic(http.Dir("static")))
@@ -217,7 +213,7 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	restrict(func(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	restrict.R(func(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 		fmt.Println("hello?")
 		c := communicator.New(w)
 		fid, ok := t.Claims["id"].(float64)
@@ -237,8 +233,6 @@ func GetUserHandler(w http.ResponseWriter, r *http.Request) {
 		c.OKWithData("Here is your user", u)
 
 	})(w, r)
-
-	// c.Fail("You didn't provide any data :/")
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -263,14 +257,13 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := jwt.New(jwt.SigningMethodHS256)
-	token.Claims["id"] = u.ID
-	token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+	claims := make(map[string]interface{})
+	claims["id"] = u.ID
+	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
-	ts, err := token.SignedString(pkey)
+	ts, err := restrict.Token(claims)
 	if err != nil {
 		c.Fail("Failure signing that token!")
-		fmt.Println(err)
 		return
 	}
 
@@ -292,72 +285,6 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c.OKWithData("Successfully registered that user", u)
-}
-
-/*func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
-	c := communicator.New(w)
-
-	id, ok := t.Claims["id"].(int64)
-	if !ok {
-		c.Fail("Not a valid ID in token")
-		return
-	}
-
-	u, err := models.GetUserByID(id)
-	if err != nil {
-		c.Fail("Unable to get user")
-		return
-	}
-
-	name := r.FormValue("name")
-	description := r.FormValue("description")
-	explanation := r.FormValue("explanation")
-
-	if name == "" || description == "" || explanation == "" {
-		c.Fail("Not valid name/description/explanation")
-		return
-	}
-
-	a, err := u.CreateAssignment(name, description, explanation)
-	if err != nil {
-		c.Fail("Could not create assignment " + err.Error())
-		return
-	}
-
-	c.OKWithData("Here is the assignment", a)
-}*/
-
-func restrict(fn func(http.ResponseWriter, *http.Request, *jwt.Token)) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		ts := r.FormValue("access_token")
-		c := communicator.New(w)
-
-		token, err := jwt.Parse(ts, func(t *jwt.Token) (interface{}, error) {
-			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
-			}
-			return pkey, nil
-		})
-
-		if err != nil {
-			c.Fail("You are not using a valid token:" + err.Error())
-			fmt.Println(err)
-			return
-		}
-
-		if !token.Valid {
-			c.Fail("Something obscurely weird happened to your token!")
-			return
-		}
-
-		fn(w, r, token)
-	}
-}
-
-func readPrivateKey() ([]byte, error) {
-	privateKey, e := ioutil.ReadFile("keys/app.rsa")
-
-	return privateKey, e
 }
 
 func getUserFromToken(t *jwt.Token) (models.User, error) {
