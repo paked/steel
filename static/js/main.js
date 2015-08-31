@@ -210,40 +210,22 @@ app.controller('PersonalAssignmentCtrl', ['$scope', '$http', '$routeParams', 'us
 
 app.controller('AssignmentsCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
     user.setClass($routeParams.class_id);
-    var index = parseInt($routeParams.id) || 1;
+    var id = parseInt($routeParams.id) || 1;
 
-    $scope.tasks = [
-        {
-            "name": "Funny Strings",
-            "description": "If the reverse of a character (a = z, b = y, c = x, etc.) is opposite iteself lorem ipsum xyz",
-            "id": 1,
-            "done": false,
-            "time": "Due in 3 days"
-        },
-        {
-            "name": "Reverse String",
-            "description": "Given a string, how would you reverse it... quickly and easily",
-            "id": 2,
-            "done": false,
-            "time": "Due in 3 days"
-        },
-        {
-            "name": "Utopian Tree",
-            "description": "Given a spec for a program, implement it using your knowledge of control structures",
-            "id": 3,
-            "done": true,
-            "time": "Due in 4 days"
-        },
-        {
-            "name": "Print",
-            "description": "Make a few words appear in your terminal",
-            "id": 4,
-            "done": true,
-            "time": "Due in 10 days"
-        }
-    ];
+    $http.get('/classes/' + user.classID + '/assignments/due?access_token=' + user.token)
+        .then(function(resp) {
+            $scope.tasks = resp.data.data;
+            for (var i = 0; i < $scope.tasks.length; i++) {
+                var task = $scope.tasks[i]
+                if (task.id == id) {
+                    $scope.selected = task;
+                    break;
+                }
+            }
+        });
 
-    $scope.selected = $scope.tasks[index - 1];
+    $scope.tasks = [];
+    $scope.selected = {};
 }]);
 
 app.controller('FeedCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {

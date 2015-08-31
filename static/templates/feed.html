@@ -29,7 +29,7 @@
                         <a class="list-group-item" ng-repeat="task in dueTasks | limitTo: 5" ng-href="#/classes/{{user.classID}}/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
                     </div>                           
 
-                    <div class="panel-footer">
+                    <div class="panel-footer" ng-show="dueTasks.length > 4">
                         <a href="#/classes/{{user.classID}}/assignments">See more...</a>
                     </div>
                 </div>
@@ -47,9 +47,10 @@
                         <a class="list-group-item" ng-repeat="task in dueTasks | limitTo: 4" ng-href="#/classes/{{user.classID}}/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
                     </div>                           
 
-                    <div class="panel-footer">
+                    <div class="panel-footer" ng-show="dueTasks.length > 4">
                         <a href="#/classes/{{user.classID}}/assignments">See more...</a>
                     </div>
+
                 </div>
             </div>
         </div>
