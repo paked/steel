@@ -101,7 +101,8 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
                         return;
                     }
 
-                    u.admin = resp.data.data.permissions == 1;
+                    console.log(resp.data);
+
                     u.username  = resp.data.data.username;
 
                     u.classes(); 
@@ -123,7 +124,16 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
         },
         setClass: function(i) {
             u.classID = i;
+            u.currentStudent();
             $rootScope.$broadcast('user.update');
+        },
+        currentStudent: function() {
+            $http.get('/classes/' + u.classID + '/students?access_token=' + u.token).
+                then(function(resp) {
+                    // TODO error handling
+                    u.student = resp.data.data;
+                    $rootScope.$broadcast('user.update');
+                });
         }
     };
 
@@ -165,16 +175,19 @@ app.controller('AdminCtrl', ['$scope', '$http', '$location', '$routeParams', 'us
     }
 }]);
 
-app.controller('WholeCtrl', ['$rootScope', 'user', '$location', function($scope, user, $location) {
-    $scope.loggedIn = false;
-    $scope.user = undefined;
-    $scope.inClass = false;
+app.controller('WholeCtrl', ['$rootScope', 'user', '$location', function($rootScope, user, $location) {
+    $rootScope.loggedIn = false;
+    $rootScope.user = undefined;
+    $rootScope.inClass = false;
+    $rootScope.student = undefined;
 
-    $scope.$on('user.update', function(evt) {
-        $scope.user = user;
-        $scope.loggedIn = true;
-        $scope.inClass = user.classID !== undefined; // true;
-        console.log(user.classID);
+    $rootScope.$on('user.update', function(evt) {
+        $rootScope.user = user;
+        $rootScope.loggedIn = true;
+        $rootScope.inClass = user.classID !== undefined; // true;
+        $rootScope.student = user.student;
+        console.log("stud");
+        console.log($rootScope.student);
     });
 }]);
 

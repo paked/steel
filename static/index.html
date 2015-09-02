@@ -39,7 +39,7 @@
                     <ul class="nav navbar-nav" ng-show="inClass">
                         <li><a ng-href="#/classes/{{user.classID}}/assignments">Assignments</a></li>
                         <li><a ng-href="#/classes/{{user.classID}}/sandbox">Sandbox</a></li>
-                        <li ng-show="user.admin"><a href="#/admin">Admin</a></li>
+                        <li ng-show="student.permission == 1"><a href="#/admin">Admin</a></li>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right" ng-show="loggedIn">
