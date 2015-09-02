@@ -64,23 +64,17 @@ func AddUserToClassHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token)
 		return
 	}
 
-	cID := vars["class_id"]
-
-	idI, err := strconv.Atoi(cID) // ugly variable names ahead.
-	if err != nil {
-		c.Fail("Unable to parse that id")
-		return
-	}
-
-	id := int64(idI)
-
 	username := r.FormValue("user")
 
 	inv, err := models.GetUser("username", username)
-
-	s, class, err := u.Class(id)
 	if err != nil {
-		c.Fail("Unable to get that class")
+		c.Fail("Could not get user")
+		return
+	}
+
+	s, class, err := getClassFromString(u, vars["class_id"])
+	if err != nil {
+		c.Fail("Could not get class")
 		return
 	}
 
@@ -371,4 +365,22 @@ func getUserFromToken(t *jwt.Token) (models.User, error) {
 	id := int64(fid)
 
 	return models.GetUserByID(id)
+}
+
+func getClassFromString(u models.User, stringID string) (models.Student, models.Class, error) {
+	var (
+		s models.Student
+		c models.Class
+	)
+
+	idI, err := strconv.Atoi(stringID) // ugly variable names ahead.
+	if err != nil {
+		return s, c, err
+	}
+
+	id := int64(idI)
+
+	s, c, err = u.Class(id)
+
+	return s, c, err
 }
