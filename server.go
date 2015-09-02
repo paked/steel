@@ -102,17 +102,7 @@ func GetStudentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 		return
 	}
 
-	cID := vars["class_id"]
-
-	idI, err := strconv.Atoi(cID) // ugly variable names ahead.
-	if err != nil {
-		c.Fail("Unable to parse that id")
-		return
-	}
-
-	id := int64(idI)
-
-	s, _, err := u.Class(id)
+	s, _, err := getClassFromString(u, vars["class_id"])
 	if err != nil {
 		c.Fail("Unable to get that class")
 		return
@@ -125,27 +115,18 @@ func GetDueAssignments(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 	c := communicator.New(w)
 
 	vars := mux.Vars(r)
-	cID := vars["class_id"]
-
-	idI, err := strconv.Atoi(cID)
-	if err != nil {
-		c.Fail("Unable to parse that id")
-		return
-	}
-
 	u, err := getUserFromToken(t)
 	if err != nil {
 		c.Fail("Unable to get user from token")
 		return
 	}
 
-	id := int64(idI)
-
-	s, _, err := u.Class(id)
+	s, _, err := getClassFromString(u, vars["class_id"])
 	if err != nil {
 		c.Fail("Could not get class info")
 		return
 	}
+
 	d, err := time.ParseDuration("168h")
 	if err != nil {
 		c.Fail("could not parse duration")
@@ -176,15 +157,6 @@ func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Toke
 	}
 
 	vars := mux.Vars(r)
-	cID := vars["class_id"]
-
-	idI, err := strconv.Atoi(cID)
-	if err != nil {
-		c.Fail("Unable to parse that id")
-		return
-	}
-
-	id := int64(idI)
 
 	u, err := getUserFromToken(t)
 	if err != nil {
@@ -192,7 +164,7 @@ func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Toke
 		return
 	}
 
-	s, _, err := u.Class(id)
+	s, _, err := getClassFromString(u, vars["class_id"])
 	if err != nil {
 		c.Fail("Could not get class info")
 		return
