@@ -41,6 +41,7 @@ func main() {
 	router.HandleFunc("/classes", restrict.R(GetClassesHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/assignments", restrict.R(CreateAssignmentHandler)).Methods("POST")
 	router.HandleFunc("/classes/{class_id}/assignments/due", restrict.R(GetDueAssignments)).Methods("GET")
+	router.HandleFunc("/classes/{class_id}/students", restrict.R(GetStudentHandler))
 
 	n := negroni.New()
 	n.Use(negroni.NewStatic(http.Dir("static")))
@@ -50,6 +51,35 @@ func main() {
 	models.InitDB(*dbFile)
 
 	http.ListenAndServe("localhost:8080", n)
+}
+
+func GetStudentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+	vars := mux.Vars(r)
+
+	u, err := getUserFromToken(t)
+	if err != nil {
+		c.Fail("Could not get user in token")
+		return
+	}
+
+	cID := vars["class_id"]
+
+	idI, err := strconv.Atoi(cID) // ugly variable names ahead.
+	if err != nil {
+		c.Fail("Unable to parse that id")
+		return
+	}
+
+	id := int64(idI)
+
+	s, _, err := u.Class(id)
+	if err != nil {
+		c.Fail("Unable to get that class")
+		return
+	}
+
+	c.OKWithData("Here is your data", s)
 }
 
 func GetDueAssignments(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
