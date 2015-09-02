@@ -169,9 +169,21 @@ app.controller('AddClassCtrl', ['$scope', '$http', '$location', '$routeParams', 
 
 app.controller('AdminCtrl', ['$scope', '$http', '$location', '$routeParams', 'user', function($scope, $http, $location, $routeParams, user) {
     user.setClass($routeParams.class_id);
-    if (!user.admin) {
+    if ($scope.student == undefined) {
+        $location.path('/');
+    }
+    
+    if ($scope.student.permission != 1) {
         $location.path('/');
         return;
+    }
+
+    $scope.invite = function() {
+        console.log("inviting")
+        $http.post('/classes/' + user.classID + '/admin/students?access_token=' + user.token + '&user=' + $scope.invitee).
+            then(function(resp) {
+                console.log(resp.data.message);
+            });
     }
 }]);
 

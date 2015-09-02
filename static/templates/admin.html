@@ -4,9 +4,9 @@
     <div class="col-md-6">
         <h2>Invite User</h2>
         <p>This will send a user a that they can click on, and join up the group</p>
-        <input class="form-control" type="text" placeholder="Enter the users email here..."></input>
+        <input ng-model="invitee" class="form-control" type="text" placeholder="Enter the users email here..."></input>
         <br>
-        <button class="btn btn-primary">Invite</button>
+        <button class="btn btn-primary" ng-click="invite()">Invite</button>
    </div>
 
     <div class="col-md-6">
