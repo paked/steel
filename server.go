@@ -41,7 +41,8 @@ func main() {
 	router.HandleFunc("/classes", restrict.R(GetClassesHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/assignments", restrict.R(CreateAssignmentHandler)).Methods("POST")
 	router.HandleFunc("/classes/{class_id}/assignments/due", restrict.R(GetDueAssignments)).Methods("GET")
-	router.HandleFunc("/classes/{class_id}/students", restrict.R(GetStudentHandler))
+	router.HandleFunc("/classes/{class_id}/students", restrict.R(GetStudentHandler)).Methods("GET")
+	router.HandleFunc("/classes/{class_id}/admin/students", restrict.R(AddUserToClassHandler)).Methods("POST")
 
 	n := negroni.New()
 	n.Use(negroni.NewStatic(http.Dir("static")))
@@ -51,6 +52,50 @@ func main() {
 	models.InitDB(*dbFile)
 
 	http.ListenAndServe("localhost:8080", n)
+}
+
+func AddUserToClassHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+	vars := mux.Vars(r)
+
+	u, err := getUserFromToken(t)
+	if err != nil {
+		c.Fail("COuld not get user from supplied token")
+		return
+	}
+
+	cID := vars["class_id"]
+
+	idI, err := strconv.Atoi(cID) // ugly variable names ahead.
+	if err != nil {
+		c.Fail("Unable to parse that id")
+		return
+	}
+
+	id := int64(idI)
+
+	username := r.FormValue("user")
+
+	inv, err := models.GetUser("username", username)
+
+	s, class, err := u.Class(id)
+	if err != nil {
+		c.Fail("Unable to get that class")
+		return
+	}
+
+	if !s.IsAdmin() {
+		c.Fail("User is not admin")
+		return
+	}
+
+	_, err = class.Invite(inv)
+	if err != nil {
+		c.Fail("Error inviting user")
+		return
+	}
+
+	c.OK("Invited user")
 }
 
 func GetStudentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
