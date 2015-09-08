@@ -7,10 +7,14 @@
 
 <div class="row" ng-repeat="chunk in chunkedClasses">
     <div class="col-md-4" ng-repeat="class in chunk">
-        <div class="panel">
-            <h1><a href="#/classes/{{class.id}}">{{class.name}}</a></h1>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="panel-title"><a href="#/classes/{{class.id}}">{{class.name}}</a></h1>
+            </div>
 
-            <p>{{class.description}}</p>
+            <div class="panel-body">
+                <p>{{class.description}}</p>
+            </div>
         </div>
     </div>
 </div>
