@@ -37,7 +37,8 @@ app.config(['$routeProvider', function($routeProvider) {
             controller: 'FeedCtrl'
         }).
         when('/', {
-            templateUrl: 'templates/hello.html'
+            templateUrl: 'templates/hello.html',
+            controller: 'HelloCtrl'
         }).
         otherwise({
             redirectTo: '/'
@@ -292,3 +293,21 @@ app.controller('FeedCtrl', ['$scope', '$http', '$routeParams', 'user', function(
         
     ];
 }]);
+
+app.controller('HelloCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
+    $scope.classes = [];
+    $http.get('/classes?access_token=' + user.token)
+        .then(function(res) {
+            $scope.chunkedClasses = res.data.data.chunk(3);
+            console.log($scope.chunkedClasses);
+        });
+}]);
+
+Array.prototype.chunk = function(chunkSize) {
+    var array=this;
+    return [].concat.apply([],
+            array.map(function(elem,i) {
+                return i%chunkSize ? [] : [array.slice(i,i+chunkSize)];
+            })
+            );
+}
