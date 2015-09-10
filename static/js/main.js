@@ -2,11 +2,11 @@ var app = angular.module('steel', ['ngRoute', 'ui.codemirror']);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
-        when('/classes/:class_id/assignments/:id?', {
-            templateUrl: 'templates/assignments.html',
-            controller: 'AssignmentsCtrl'
+        when('/classes/:class_id/workshops/:id?', {
+            templateUrl: 'templates/workshops.html',
+            controller: 'WorkshopsCtrl'
         }).
-        when('/classes/:class_id/assignments/:id/:team', {
+        when('/classes/:class_id/workshops/:id/:team', {
             templateUrl: 'templates/personal_assignment.html',
             controller: 'PersonalAssignmentCtrl'
         }).
@@ -234,7 +234,7 @@ app.controller('PersonalAssignmentCtrl', ['$scope', '$http', '$routeParams', 'us
     user.setClass($routeParams.class_id);
 }]);
 
-app.controller('AssignmentsCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
+app.controller('WorkshopsCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
     user.setClass($routeParams.class_id);
     var id = parseInt($routeParams.id) || 1;
 

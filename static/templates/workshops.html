@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-4">
         <div class="list-group">
-            <a ng-repeat="task in tasks" class="list-group-item" ng-class="{active: task.id == selected.id}" ng-href="#/classes/{{user.classID}}/assignments/{{ task.id }}">
+            <a ng-repeat="task in tasks" class="list-group-item" ng-class="{active: task.id == selected.id}" ng-href="#/classes/{{user.classID}}/workshops/{{ task.id }}">
                 <h4>{{ task.name }}<small class="pull-right">{{ task.time }}</small></h4>
                 <p>{{ task.description }}</p>
             </a>
@@ -12,7 +12,7 @@
             <div class="panel-heading clearfix">
                 <h3 class="panel-title">{{ selected.name }}</small>
                     <div class="button-group pull-right">
-                        <a ng-href="#/classes/{{user.classID}}/assignments/{{ selected.id }}/my_user_id" class="btn btn-primary" style="margin-right: 1vw;">Project Page</a>
+                        <a ng-href="#/classes/{{user.classID}}/workshops/{{ selected.id }}/my_user_id" class="btn btn-primary" style="margin-right: 1vw;">Project Page</a>
                         <small>{{ selected.time }}</small>
                     </div>
                 </h3>
