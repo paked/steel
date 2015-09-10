@@ -237,6 +237,9 @@ app.controller('PersonalAssignmentCtrl', ['$scope', '$http', '$routeParams', 'us
 app.controller('WorkshopsCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
     user.setClass($routeParams.class_id);
 
+    $scope.tasks = [];
+    $scope.selected = {};
+
     var id = $routeParams.id
     if (id !== undefined) {
         var id = parseInt($routeParams.id);
@@ -244,6 +247,16 @@ app.controller('WorkshopsCtrl', ['$scope', '$http', '$routeParams', 'user', func
 
     $http.get('/classes/' + user.classID + '/assignments/due?access_token=' + user.token)
         .then(function(resp) {
+            if (resp.data.data == null) {
+                $scope.selected = {
+                    name: "Lorem Ipsum",
+                    description: "How do I like my pie? Shaken not stirred.",
+                    explanation: "a^2 = b^2 + c^2 - 2*b*c*cosA"
+                }
+
+                return;
+            }
+
             $scope.tasks = resp.data.data;
             for (var i = 0; i < $scope.tasks.length; i++) {
                 var task = $scope.tasks[i]
@@ -253,9 +266,6 @@ app.controller('WorkshopsCtrl', ['$scope', '$http', '$routeParams', 'user', func
                 }
             }
         });
-
-    $scope.tasks = [];
-    $scope.selected = {};
 }]);
 
 app.controller('FeedCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
