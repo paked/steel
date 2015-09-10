@@ -1,19 +1,23 @@
 <div class="row">
-    <div class="col-md-10">
-        <h1>Welcome to Steel</h1> 
-        <p>Steel makes it super easy to start participating or managing a class. It is also super configurable!</p> 
-    </div>
-</div>
-
-<div class="row" ng-repeat="chunk in chunkedClasses">
-    <div class="col-md-4" ng-repeat="class in chunk">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h1 class="panel-title"><a href="#/classes/{{class.id}}">{{class.name}}</a></h1>
+    <div class="col-md-10 col-md-offset-1">
+        <div class="row">
+            <div class="col-md-10">
+                <h1>Welcome to Steel</h1> 
+                <p>Steel makes it super easy to start participating or managing a class. It is also super configurable!</p> 
             </div>
-
-            <div class="panel-body">
-                <p>{{class.description}}</p>
+        </div>
+        <div class="row" ng-repeat="chunk in chunkedClasses">
+            <div class="col-md-4" ng-repeat="class in chunk">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3>{{class.name}}</h3>
+                    </div>
+                    <img class="img-responsive img-rounded" src="{{class.image_url}}"/>
+                    <div class="caption">
+                        <p>{{class.description}}</p>
+                        <p><a ng-href="#/classes/{{class.id}}" class="btn btn-primary" role="button">Visit</a></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
