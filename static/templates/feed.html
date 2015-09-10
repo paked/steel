@@ -22,35 +22,19 @@
             <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Due This Week</h3>
+                        <h3 class="panel-title">
+                            Workshops
+                            <button ng-show="student.permission == 1" class="btn-primary btn" style="margin-left: 2vw;">New Workshop</button>
+                        </h3>
                     </div>
 
                     <div class="list-group">
                         <a class="list-group-item" ng-repeat="task in dueTasks | limitTo: 5" ng-href="#/classes/{{user.classID}}/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
                     </div>
 
-                    <div class="panel-footer" ng-show="dueTasks.length > 4">
+                    <div class="panel-footer" ng-show="dueTasks.length > 10">
                         <a href="#/classes/{{user.classID}}/assignments">See more...</a>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Tasks</h3>
-                    </div>
-
-                    <div class="list-group">
-                        <a class="list-group-item" ng-repeat="task in dueTasks | limitTo: 4" ng-href="#/classes/{{user.classID}}/assignments/{{task.id}}"> <i ng-class="{'fa-circle-o': !task.done, 'fa-circle': task.done}" class="fa fa-fw"></i> {{ task.name }}</a>
-                    </div>                           
-
-                    <div class="panel-footer" ng-show="dueTasks.length > 4">
-                        <a href="#/classes/{{user.classID}}/assignments">See more...</a>
-                    </div>
-
                 </div>
             </div>
         </div>
