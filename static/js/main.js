@@ -236,14 +236,18 @@ app.controller('PersonalAssignmentCtrl', ['$scope', '$http', '$routeParams', 'us
 
 app.controller('WorkshopsCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
     user.setClass($routeParams.class_id);
-    var id = parseInt($routeParams.id) || 1;
+
+    var id = $routeParams.id
+    if (id !== undefined) {
+        var id = parseInt($routeParams.id);
+    }
 
     $http.get('/classes/' + user.classID + '/assignments/due?access_token=' + user.token)
         .then(function(resp) {
             $scope.tasks = resp.data.data;
             for (var i = 0; i < $scope.tasks.length; i++) {
                 var task = $scope.tasks[i]
-                if (task.id == id) {
+                if (task.id == id || id === undefined) {
                     $scope.selected = task;
                     break;
                 }
