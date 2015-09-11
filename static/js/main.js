@@ -181,11 +181,21 @@ app.controller('AdminCtrl', ['$scope', '$http', '$location', '$routeParams', 'us
     }
 
     $scope.invite = function() {
-        console.log("inviting")
+        console.log("inviting");
         $http.post('/classes/' + user.classID + '/admin/students?access_token=' + user.token + '&user=' + $scope.invitee).
             then(function(resp) {
                 console.log(resp.data.message);
             });
+    }
+
+    $scope.image = function() {
+        console.log("Adding image");
+
+        $http.post('/classes/' + user.classID + '/image?access_token=' + user.token + '&image_url=' + $scope.image_url).
+            then(function(resp) {
+                console.log(resp)
+            });
+
     }
 }]);
 
