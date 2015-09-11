@@ -42,6 +42,7 @@ func main() {
 	router.HandleFunc("/classes/{class_id}/assignments", restrict.R(CreateAssignmentHandler)).Methods("POST")
 	router.HandleFunc("/classes/{class_id}/assignments/due", restrict.R(GetDueAssignments)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/students", restrict.R(GetStudentHandler)).Methods("GET")
+	router.HandleFunc("/classes/{class_id}/image", restrict.R(SetClassImageHandler)).Methods("POST")
 	router.HandleFunc("/classes/{class_id}/admin/students", restrict.R(AddUserToClassHandler)).Methods("POST")
 
 	n := negroni.New()
@@ -52,6 +53,36 @@ func main() {
 	models.InitDB(*dbFile)
 
 	http.ListenAndServe("localhost:8080", n)
+}
+
+func SetClassImageHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+	vars := mux.Vars(r)
+
+	u, err := getUserFromToken(t)
+	if err != nil {
+		c.Fail("Could not get user")
+		return
+	}
+
+	s, class, err := getClassFromString(u, vars["class_id"])
+	if err != nil {
+		c.Fail("Could not get class")
+		return
+	}
+
+	if !s.IsAdmin() {
+		c.Error("You are not an admin!")
+		return
+	}
+
+	err = class.SetImage(r.FormValue("image_url"))
+	if err != nil {
+		c.Fail("Could not set image url")
+		return
+	}
+
+	c.OK("Done!")
 }
 
 func AddUserToClassHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
