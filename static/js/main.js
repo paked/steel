@@ -49,6 +49,7 @@ app.filter('titlecase', function() {
     return function(input) {
         var words = input.split(' ');
         for (i in words) {
+            console.log(words[i]);
             words[i] = words[i].toLowerCase();
             words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1)
         }
@@ -312,13 +313,12 @@ app.controller('HelloCtrl', ['$scope', '$http', 'user', function($scope, $http, 
     $scope.classes = [];
     $http.get('/classes?access_token=' + user.token)
         .then(function(res) {
-            $scope.chunkedClasses = res.data.data.chunk(3);
+            $scope.chunkedClasses = chunk(res.data.data, 3);
             console.log($scope.chunkedClasses);
         });
 }]);
 
-Array.prototype.chunk = function(chunkSize) {
-    var array=this;
+chunk = function(array, chunkSize) {
     return [].concat.apply([],
             array.map(function(elem,i) {
                 return i%chunkSize ? [] : [array.slice(i,i+chunkSize)];
