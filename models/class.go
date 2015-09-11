@@ -84,3 +84,11 @@ func (c *Class) Student(u User) (Student, error) {
 
 	return s, err
 }
+
+func (c *Class) SetImage(url string) error {
+	c.Image = url
+
+	_, err := db.Exec("UPDATE classes SET image_url = ? WHERE id = ?", c.Image, c.ID)
+
+	return err
+}

@@ -4,6 +4,7 @@ import (
 	"testing"
 )
 
+// This is a mess (tm).
 func TestClass(t *testing.T) {
 	u, err := RegisterUser("class_tester", "pw", "matt")
 	c, err := u.NewClass("My Class", "A class for learning JavaScript")
@@ -13,6 +14,15 @@ func TestClass(t *testing.T) {
 
 	if c.Name != "My Class" || c.Description != "A class for learning JavaScript" {
 		t.Error("Incorrect information in class")
+	}
+
+	err = c.SetImage("imgs/house.png")
+	if err != nil {
+		t.Error("Could not set image", err)
+	}
+
+	if c.Image != "imgs/house.png" {
+		t.Error("Incorrect image url")
 	}
 
 	cT, err := GetClassByID(c.ID)
@@ -30,6 +40,10 @@ func TestClass(t *testing.T) {
 
 	if cT.Description != c.Description {
 		t.Error("Not the same description")
+	}
+
+	if cT.Image != c.Image {
+		t.Error("not the same image")
 	}
 
 	s, err := c.Student(u)
