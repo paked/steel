@@ -233,6 +233,12 @@ func CreateClassHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 		return
 	}
 
+	err = class.SetImage("imgs/home.png")
+	if err != nil {
+		c.Fail("Could not set home class image")
+		return
+	}
+
 	c.OKWithData("Here is your class", class)
 }
 
