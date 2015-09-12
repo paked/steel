@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type Workshop struct {
 	ID          int64     `json:"id"`
@@ -9,6 +12,7 @@ type Workshop struct {
 	Explanation string    `json:"explanation"`
 	Due         time.Time `json:"due"`
 	Class       int64     `json:"class"`
+	Prequel     int64
 }
 
 func (a *Workshop) Delete() error {
@@ -60,4 +64,63 @@ func (a *Workshop) Submissions() ([]Submission, error) {
 	}
 
 	return sm, nil
+}
+
+func (w *Workshop) CreatePage(title, contents string) (WorkshopPage, error) {
+	var p WorkshopPage
+
+	ps, err := w.Pages()
+	if err != nil {
+		return p, err
+	}
+
+	p = WorkshopPage{
+		Workshop: w.ID,
+		Title:    title,
+		Contents: contents,
+		Created:  time.Now().UnixNano(),
+		Order:    len(ps),
+	}
+
+	res, err := db.Exec("INSERT INTO workshop_pages (workshop, contents, title, created, updated, sequence) VALUES (?, ?, ?, ?, ?, ?)", p.Workshop, p.Contents, p.Title, p.Created, p.Updated, p.Order)
+	if err != nil {
+		return p, err
+	}
+
+	p.ID, err = res.LastInsertId()
+
+	return p, err
+}
+
+func (w *Workshop) Pages() ([]WorkshopPage, error) {
+	var ps []WorkshopPage
+
+	rows, err := db.Query("SELECT id, workshop, contents, title, created, updated, sequence FROM workshop_pages WHERE workshop = ? ORDER BY sequence ASC", w.ID)
+	if err != nil {
+		return ps, err
+	}
+
+	for rows.Next() {
+		p := WorkshopPage{}
+
+		err = rows.Scan(&p.ID, &p.Workshop, &p.Contents, &p.Title, &p.Created, &p.Updated, &p.Order)
+		if err != nil {
+			return ps, err
+		}
+
+		fmt.Println(p)
+		ps = append(ps, p)
+	}
+
+	return ps, nil
+}
+
+type WorkshopPage struct {
+	ID       int64  `json:"id"`
+	Workshop int64  `json:"workshop"`
+	Contents string `json:"contents"`
+	Title    string `json:"title"`
+	Created  int64  `json:"created"`
+	Updated  int64  `json:"updated"`
+	Order    int    `json:"order"`
 }

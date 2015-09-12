@@ -183,3 +183,48 @@ func TestAllSubmissions(t *testing.T) {
 	a.Delete()
 	u.Delete()
 }
+
+func TestWorkshopPages(t *testing.T) {
+	u, err := RegisterUser("test_workshop_pages", "xD", "someeon")
+	if err != nil {
+		t.Error("Could not register user", err)
+	}
+
+	c, err := u.NewClass("workshop pages", "something pages")
+	if err != nil {
+		t.Error("COuld not make new classs", err)
+	}
+
+	s, err := c.Student(u)
+	if err != nil {
+		t.Error("Could not get student", err)
+	}
+
+	w, err := s.CreateWorkshop("the page test workshop", "something description", "something description")
+	if err != nil {
+		t.Error("COuld not create workshop")
+	}
+
+	ps, err := w.Pages()
+	if err != nil {
+		t.Error("Could not get pages", err)
+	}
+
+	if len(ps) != 0 {
+		t.Error("Wrong amount of pages! Expected 0, got ", len(ps))
+	}
+
+	_, err = w.CreatePage("Welcome to pages", "This is the beginning.")
+	if err != nil {
+		t.Error("Could not create page: ", err)
+	}
+
+	ps, err = w.Pages()
+	if err != nil {
+		t.Error("Could not get pages", err)
+	}
+
+	if len(ps) != 1 {
+		t.Error("Wrong amount of pages! Expected 1, got ", len(ps))
+	}
+}

@@ -45,5 +45,15 @@ CREATE TABLE "students" (
     `permission_level` INTEGER,
     `class` INTEGER
 );
+
+CREATE TABLE  "workshop_pages" (
+    `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `workshop` INTEGER,
+    `title` TEXT,
+    `contents` TEXT,
+    `created` INTEGER,
+    `updated` INTEGER,
+    `sequence` INTEGER
+);
 ;
 COMMIT;
