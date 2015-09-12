@@ -256,7 +256,7 @@ app.controller('WorkshopsCtrl', ['$scope', '$http', '$routeParams', 'user', func
         var id = parseInt($routeParams.id);
     }
 
-    $http.get('/classes/' + user.classID + '/assignments/due?access_token=' + user.token)
+    $http.get('/classes/' + user.classID + '/workshops/due?access_token=' + user.token)
         .then(function(resp) {
             if (resp.data.data == null) {
                 $scope.selected = {
@@ -281,7 +281,7 @@ app.controller('WorkshopsCtrl', ['$scope', '$http', '$routeParams', 'user', func
 
 app.controller('FeedCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
     user.setClass($routeParams.class_id);
-    $http.get('/classes/' + user.classID + '/assignments/due?access_token=' + user.token)
+    $http.get('/classes/' + user.classID + '/workshops?access_token=' + user.token)
         .then(function(resp) {
             $scope.dueTasks = resp.data.data;
             console.log(resp);
