@@ -40,6 +40,8 @@ func main() {
 	router.HandleFunc("/classes", restrict.R(CreateClassHandler)).Methods("POST")
 	router.HandleFunc("/classes", restrict.R(GetClassesHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/workshops", restrict.R(CreateWorkshopHandler)).Methods("POST")
+	router.HandleFunc("/classes/{class_id}/workshops/{workshop_id}/pages", restrict.R(CreateWorkshopPageHandler)).Methods("POST")
+	router.HandleFunc("/classes/{class_id}/workshops/{workshop_id}/pages", restrict.R(GetWorkshopPagesHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/workshops", restrict.R(GetWorkshopsHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/students", restrict.R(GetStudentHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/image", restrict.R(SetClassImageHandler)).Methods("POST")
@@ -53,6 +55,83 @@ func main() {
 	models.InitDB(*dbFile)
 
 	http.ListenAndServe("localhost:8080", n)
+}
+
+func GetWorkshopPagesHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+	vars := mux.Vars(r)
+
+	u, err := getUserFromToken(t)
+	if err != nil {
+		c.Fail("COuld not get user")
+		return
+	}
+
+	_, class, err := getClassFromString(u, vars["class_id"])
+	if err != nil {
+		c.Fail("Could not get class info")
+		return
+	}
+
+	wid, err := strconv.ParseInt(vars["workshop_id"], 10, 64)
+	if err != nil {
+		c.Fail("Not a valid workshop id")
+		return
+	}
+
+	work, err := class.Workshop(wid)
+	if err != nil {
+		c.Fail("Could not get workshop")
+		return
+	}
+
+	ps, err := work.Pages()
+	if err != nil {
+		c.Fail("Could not get pages")
+		return
+	}
+
+	c.OKWithData("Here are your pages", ps)
+}
+
+func CreateWorkshopPageHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+	vars := mux.Vars(r)
+
+	u, err := getUserFromToken(t)
+	if err != nil {
+		c.Fail("COuld not get user")
+		return
+	}
+
+	_, class, err := getClassFromString(u, vars["class_id"])
+	if err != nil {
+		c.Fail("Could not get class info")
+		return
+	}
+
+	wid, err := strconv.ParseInt(vars["workshop_id"], 10, 64)
+	if err != nil {
+		c.Fail("Not a valid workshop id")
+		return
+	}
+
+	work, err := class.Workshop(wid)
+	if err != nil {
+		c.Fail("Could not get workshop")
+		return
+	}
+
+	title := r.FormValue("title")
+	content := r.FormValue("content")
+
+	p, err := work.CreatePage(title, content)
+	if err != nil {
+		c.Fail("Could not create page")
+		return
+	}
+
+	c.OKWithData("Here is your page", p)
 }
 
 func SetClassImageHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
