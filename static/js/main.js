@@ -10,6 +10,10 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'templates/workshops.html',
             controller: 'WorkshopsCtrl'
         }).
+        when('/classes/:class_id/workshops/:workshop_id/pages', {
+            templateUrl: 'templates/view_workshop.html',
+            controller: 'ViewWorkshopCtrl'
+        }).
         when('/classes/:class_id/workshops/:id/:team', {
             templateUrl: 'templates/personal_assignment.html',
             controller: 'PersonalAssignmentCtrl'
@@ -146,6 +150,24 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
     u.loggedIn();
 
     return u;
+}]);
+
+app.controller('ViewWorkshopCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
+    user.setClass($routeParams.class_id);
+
+    $scope.pages = [];
+    $scope.selected = {};
+
+    $http.get('/classes/'+ user.classID + '/workshops/' + $routeParams.workshop_id + '/pages?access_token=' + user.token).
+        then(function(resp) {
+            console.log(resp);
+            $scope.pages = resp.data.data;
+            $scope.selected = $scope.pages[0];
+        });
+
+    $scope.view = function(page) {
+        $scope.selected = page;
+    };
 }]);
 
 app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routeParams', 'user', function($scope, $http, $location, $routeParams, user) {
