@@ -1,9 +1,6 @@
 package models
 
-import (
-	"fmt"
-	"time"
-)
+import "time"
 
 type Workshop struct {
 	ID          int64     `json:"id"`
@@ -108,7 +105,6 @@ func (w *Workshop) Pages() ([]WorkshopPage, error) {
 			return ps, err
 		}
 
-		fmt.Println(p)
 		ps = append(ps, p)
 	}
 

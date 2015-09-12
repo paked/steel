@@ -214,7 +214,7 @@ func TestWorkshopPages(t *testing.T) {
 		t.Error("Wrong amount of pages! Expected 0, got ", len(ps))
 	}
 
-	_, err = w.CreatePage("Welcome to pages", "This is the beginning.")
+	p, err := w.CreatePage("Welcome to pages", "This is the beginning.")
 	if err != nil {
 		t.Error("Could not create page: ", err)
 	}
@@ -226,5 +226,31 @@ func TestWorkshopPages(t *testing.T) {
 
 	if len(ps) != 1 {
 		t.Error("Wrong amount of pages! Expected 1, got ", len(ps))
+	}
+
+	correct := []WorkshopPage{p}
+
+	for i := 0; i < 10; i++ {
+		p, err = w.CreatePage(fmt.Sprintf("Page #%v", i), "something description")
+		if err != nil {
+			t.Error("Could not add page #", i)
+		}
+
+		correct = append(correct, p)
+	}
+
+	ps, err = w.Pages()
+	if err != nil {
+		t.Error("Coudl not get pages")
+	}
+
+	if len(ps) != len(correct) {
+		t.Error("Pages are not the same length")
+	}
+
+	for i := 0; i < len(correct); i++ {
+		if ps[i] != correct[i] {
+			t.Error("Pages are not identical,", ps[i], "is not", correct[i])
+		}
 	}
 }
