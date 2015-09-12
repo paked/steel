@@ -25,3 +25,7 @@
 .active > h4 > small {
     color: white;
 }
+
+.page {
+    margin-top: 2rem;
+}

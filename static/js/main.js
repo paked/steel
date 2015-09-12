@@ -2,6 +2,10 @@ var app = angular.module('steel', ['ngRoute', 'ui.codemirror']);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
+        when('/classes/:class_id/workshops/create', {
+            templateUrl: 'templates/create_workshop.html',
+            controller: 'CreateWorkshopCtrl'
+        }).
         when('/classes/:class_id/workshops/:id?', {
             templateUrl: 'templates/workshops.html',
             controller: 'WorkshopsCtrl'
@@ -144,6 +148,36 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
     return u;
 }]);
 
+app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routeParams', 'user', function($scope, $http, $location, $routeParams, user) {
+    user.setClass($routeParams.class_id);
+    
+    $scope.workshop = null;
+    $scope.canCreatePages = false;
+
+    $scope.pages = [];
+
+    $scope.create = function() {
+        $http.post('/classes/' + $routeParams.class_id + '/workshops?access_token=' + user.token + '&name=' + $scope.name + '&description=' + $scope.description + '&explanation=' + $scope.explanation).
+            then(function(resp) {
+                console.log(resp.data);
+                $scope.canCreatePages = true;
+                $scope.pages.push({});
+                $scope.workshop = resp.data.data;
+            });
+    }
+
+    $scope.addPage = function() {
+        console.log($scope.pages);
+        var page = $scope.pages[$scope.pages.length - 1];
+        $http.post('/classes/' + user.classID + '/workshops/' + $scope.workshop.id + '/pages?access_token=' + user.token + '&title=' + page.title +  '&content=' + page.content).
+            then(function(resp) {
+                console.log(resp.data);
+                $scope.pages.push({});
+            });
+    }
+
+}]);
+
 app.controller('AddClassCtrl', ['$scope', '$http', '$location', '$routeParams', 'user', function($scope, $http, $location, $routeParams, user) {
     user.setClass($routeParams.class_id);
     $scope.go = function() {
@@ -256,7 +290,7 @@ app.controller('WorkshopsCtrl', ['$scope', '$http', '$routeParams', 'user', func
         var id = parseInt($routeParams.id);
     }
 
-    $http.get('/classes/' + user.classID + '/workshops/due?access_token=' + user.token)
+    $http.get('/classes/' + user.classID + '/workshops?access_token=' + user.token)
         .then(function(resp) {
             if (resp.data.data == null) {
                 $scope.selected = {
