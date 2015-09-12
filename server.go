@@ -39,8 +39,8 @@ func main() {
 	router.HandleFunc("/users/register", RegisterHandler).Methods("POST")
 	router.HandleFunc("/classes", restrict.R(CreateClassHandler)).Methods("POST")
 	router.HandleFunc("/classes", restrict.R(GetClassesHandler)).Methods("GET")
-	router.HandleFunc("/classes/{class_id}/assignments", restrict.R(CreateAssignmentHandler)).Methods("POST")
-	router.HandleFunc("/classes/{class_id}/assignments/due", restrict.R(GetDueAssignments)).Methods("GET")
+	router.HandleFunc("/classes/{class_id}/workshops", restrict.R(CreateWorkshopHandler)).Methods("POST")
+	router.HandleFunc("/classes/{class_id}/workshops", restrict.R(GetWorkshopsHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/students", restrict.R(GetStudentHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/image", restrict.R(SetClassImageHandler)).Methods("POST")
 	router.HandleFunc("/classes/{class_id}/admin/students", restrict.R(AddUserToClassHandler)).Methods("POST")
@@ -142,7 +142,7 @@ func GetStudentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 	c.OKWithData("Here is your data", s)
 }
 
-func GetDueAssignments(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+func GetWorkshopsHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 	c := communicator.New(w)
 
 	vars := mux.Vars(r)
@@ -166,16 +166,16 @@ func GetDueAssignments(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 
 	tm := time.Now().Add(d)
 
-	as, err := s.DueAssignments(tm)
+	as, err := s.Workshops(tm)
 	if err != nil {
-		c.Fail("Could not get assignments")
+		c.Fail("Could not get workshop")
 		return
 	}
 
-	c.OKWithData("Here are your assignments", as)
+	c.OKWithData("Here are your workshops", as)
 }
 
-func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+func CreateWorkshopHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 	c := communicator.New(w)
 
 	name := r.FormValue("name")
@@ -201,13 +201,13 @@ func CreateAssignmentHandler(w http.ResponseWriter, r *http.Request, t *jwt.Toke
 		return
 	}
 
-	a, err := s.CreateAssignment(name, description, explanation)
+	a, err := s.CreateWorkshop(name, description, explanation)
 	if err != nil {
-		c.Fail("Could not create assignmnet")
+		c.Fail("Could not create workshop")
 		return
 	}
 
-	c.OKWithData("Here is your assignment", a)
+	c.OKWithData("Here is your workshops", a)
 }
 
 func CreateClassHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
