@@ -42,6 +42,7 @@ func main() {
 	router.HandleFunc("/classes/{class_id}/workshops", restrict.R(CreateWorkshopHandler)).Methods("POST")
 	router.HandleFunc("/classes/{class_id}/workshops/{workshop_id}/pages", restrict.R(CreateWorkshopPageHandler)).Methods("POST")
 	router.HandleFunc("/classes/{class_id}/workshops/{workshop_id}/pages", restrict.R(GetWorkshopPagesHandler)).Methods("GET")
+	router.HandleFunc("/classes/{class_id}/workshops/{workshop_id}/pages/{page_id}/edit", restrict.R(EditPageHandler)).Methods("POST")
 	router.HandleFunc("/classes/{class_id}/workshops/{workshop_id}", restrict.R(GetWorkshopHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/workshops", restrict.R(GetWorkshopsHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/students", restrict.R(GetStudentHandler)).Methods("GET")
@@ -56,6 +57,55 @@ func main() {
 	models.InitDB(*dbFile)
 
 	http.ListenAndServe("localhost:8080", n)
+}
+
+func EditPageHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+	vars := mux.Vars(r)
+
+	u, err := getUserFromToken(t)
+	if err != nil {
+		c.Fail("COuld not get user")
+		return
+	}
+
+	_, class, err := getClassFromString(u, vars["class_id"])
+	if err != nil {
+		c.Fail("Could not get class info")
+		return
+	}
+
+	wid, err := strconv.ParseInt(vars["workshop_id"], 10, 64)
+	if err != nil {
+		c.Fail("Not a valid workshop id")
+		return
+	}
+
+	work, err := class.Workshop(wid)
+	if err != nil {
+		c.Fail("Could not get workshop")
+		return
+	}
+
+	pid, err := strconv.ParseInt(vars["page_id"], 10, 64)
+	if err != nil {
+		c.Fail("Coudl not get page id")
+		return
+	}
+
+	p, err := work.Page(pid)
+	if err != nil {
+		c.Fail("COuld not get page")
+		return
+	}
+
+	err = p.Edit(r.FormValue("title"), r.FormValue("contents"))
+	if err != nil {
+		c.Fail("Could not edit page")
+		return
+	}
+
+	c.OKWithData("here is your page", p)
 }
 
 func GetWorkshopHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
