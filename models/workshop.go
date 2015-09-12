@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type Assignment struct {
+type Workshop struct {
 	ID          int64     `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
@@ -11,14 +11,14 @@ type Assignment struct {
 	Class       int64     `json:"class"`
 }
 
-func (a *Assignment) Delete() error {
+func (a *Workshop) Delete() error {
 	_, err := db.Exec("DELETE FROM assignments WHERE id = ?", a.ID)
 
 	return err
 }
 
-func GetAssignment(id int64) (Assignment, error) {
-	a := Assignment{
+func GetAssignment(id int64) (Workshop, error) {
+	a := Workshop{
 		ID: id,
 	}
 
@@ -38,7 +38,7 @@ func GetAssignment(id int64) (Assignment, error) {
 	return a, nil
 }
 
-func (a *Assignment) Submissions() ([]Submission, error) {
+func (a *Workshop) Submissions() ([]Submission, error) {
 	var sm []Submission
 
 	rows, err := db.Query("SELECT id, thoughts, team_name FROM submissions WHERE assignment = ?", a.ID)

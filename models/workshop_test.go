@@ -32,7 +32,7 @@ func TestAssignments(t *testing.T) {
 		t.Error("COuld not make admin", err)
 	}
 
-	a, err := s.CreateAssignment("Test", "descritpion", "explanation")
+	a, err := s.CreateWorkshop("Test", "descritpion", "explanation")
 	if err != nil {
 		t.Error("Could not create Assignment: ", err)
 	}
@@ -108,7 +108,7 @@ func TestDueAssignments(t *testing.T) {
 	s.MakeAdmin()
 
 	for i := 0; i < 10; i++ {
-		a, err := s.CreateAssignment("Test", "testing", "terster")
+		a, err := s.CreateWorkshop("Test", "testing", "terster")
 		if err != nil {
 			t.Error(err)
 		}
@@ -118,7 +118,7 @@ func TestDueAssignments(t *testing.T) {
 
 	tm := time.Now()
 
-	as, err := s.DueAssignments(tm)
+	as, err := s.Workshops(tm)
 
 	if len(as) != 10 {
 		t.Errorf("Expecting 10 assignments after %v got %v err: %v", tm.UnixNano(), len(as), err)
@@ -146,7 +146,7 @@ func TestAllSubmissions(t *testing.T) {
 
 	s.MakeAdmin()
 
-	a, err := s.CreateAssignment("A", "desc", "expl")
+	a, err := s.CreateWorkshop("A", "desc", "expl")
 	if err != nil {
 		t.Error("Could not make assignment")
 	}

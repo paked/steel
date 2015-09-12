@@ -59,8 +59,8 @@ func (s *Student) updatePermissions(level int) error {
 	return nil
 }
 
-func (s *Student) DueAssignments(before time.Time) ([]Assignment, error) {
-	var as []Assignment
+func (s *Student) Workshops(before time.Time) ([]Workshop, error) {
+	var as []Workshop
 	rows, err := db.Query("SELECT id, name, description, explanation, due, class FROM assignments WHERE due < ? AND class = ?", before.UnixNano(), s.Class)
 	if err != nil {
 		return as, err
@@ -69,7 +69,7 @@ func (s *Student) DueAssignments(before time.Time) ([]Assignment, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		a := Assignment{}
+		a := Workshop{}
 		var unixTime int64
 
 		err := rows.Scan(&a.ID, &a.Name, &a.Description, &a.Explanation, &unixTime, &a.Class)
@@ -85,14 +85,14 @@ func (s *Student) DueAssignments(before time.Time) ([]Assignment, error) {
 	return as, nil
 }
 
-func (s *Student) CreateAssignment(name, description, explanation string) (Assignment, error) {
-	a := Assignment{}
+func (s *Student) CreateWorkshop(name, description, explanation string) (Workshop, error) {
+	a := Workshop{}
 
 	if s.Permissions != AdminPermissions {
 		return a, errors.New("Incorrect permissions")
 	}
 
-	a = Assignment{
+	a = Workshop{
 		Name:        name,
 		Description: description,
 		Explanation: explanation,
@@ -109,7 +109,7 @@ func (s *Student) CreateAssignment(name, description, explanation string) (Assig
 	return a, err
 }
 
-func (s *Student) StartAssignment(a Assignment) (Submission, error) {
+func (s *Student) StartAssignment(a Workshop) (Submission, error) {
 	sub := Submission{
 		TeamName:   "Assignment",
 		Assignment: a.ID,
