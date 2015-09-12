@@ -1,4 +1,8 @@
-var app = angular.module('steel', ['ngRoute', 'ui.codemirror']);
+var app = angular.module('steel', ['ngRoute', 'ui.codemirror', 'hc.marked']);
+
+app.config(['markedProvider', function(markedProvider) {
+    markedProvider.setOptions({gfm: true});
+}]);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
