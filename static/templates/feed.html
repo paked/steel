@@ -24,7 +24,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             Workshops
-                            <button ng-show="student.permission == 1" class="btn-primary btn" style="margin-left: 2vw;">New Workshop</button>
+                            <a ng-show="student.permission == 1" class="btn-primary btn" style="margin-left: 2vw;" ng-href="#/classes/{{ user.classID}}/workshops/create">New Workshop</a>
                         </h3>
                     </div>
 

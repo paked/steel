@@ -3,11 +3,11 @@
         <h2>Create a New Workshop</h2>
         <label for="name">Name </label><input type="text" class="form-control" ng-model="workshop.name" name="name" id="name">
         <label for="description">Description</label><input type="text" class="form-control" ng-model="workshop.description" name="description" id="description">
+        <label for="expanation">Explanation</label><input type="text" class="form-control" ng-model="workshop.explanation" name="explanation" id="explanation">
 
         <br>
 
         <button ng-show="!edit" ng-click="create()" class="btn btn-primary">Add Workshop</button>
-        <!--<button ng-show="edit" ng-click="update()" class="btn btn-primary">Update Workshop</button>-->
         
         <div ng-repeat="page in pages" class="page">
             <div class="panel panel-default">
