@@ -2,7 +2,7 @@ var app = angular.module('steel', ['ngRoute', 'ui.codemirror']);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
-        when('/classes/:class_id/workshops/create', {
+        when('/classes/:class_id/workshops/create/:workshop_id?', {
             templateUrl: 'templates/create_workshop.html',
             controller: 'CreateWorkshopCtrl'
         }).
@@ -173,13 +173,30 @@ app.controller('ViewWorkshopCtrl', ['$scope', '$http', '$routeParams', 'user', f
 app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routeParams', 'user', function($scope, $http, $location, $routeParams, user) {
     user.setClass($routeParams.class_id);
     
-    $scope.workshop = null;
+    $scope.workshop = {};
     $scope.canCreatePages = false;
+    $scope.edit = false;
 
     $scope.pages = [];
 
+    if ($routeParams.workshop_id !== undefined) {
+        $scope.edit = true;
+
+        $http.get('/classes/' + $routeParams.class_id + '/workshops/' + $routeParams.workshop_id + '?access_token=' + user.token).
+            then(function(resp) {
+                console.log(resp.data);
+                $scope.workshop = resp.data.data;
+            });
+
+        $http.get('/classes/' + $routeParams.class_id + '/workshops/' + $routeParams.workshop_id + '/pages?access_token=' + user.token).
+            then(function(resp) {
+                console.log(resp.data);
+                $scope.pages = resp.data.data;
+            });
+    }
+
     $scope.create = function() {
-        $http.post('/classes/' + $routeParams.class_id + '/workshops?access_token=' + user.token + '&name=' + $scope.name + '&description=' + $scope.description + '&explanation=' + $scope.explanation).
+        $http.post('/classes/' + $routeParams.class_id + '/workshops?access_token=' + user.token + '&name=' + $scope.workshop.name + '&description=' + $scope.workshop.description + '&explanation=' + $scope.workshop.explanation).
             then(function(resp) {
                 console.log(resp.data);
                 $scope.canCreatePages = true;
@@ -191,11 +208,14 @@ app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routePar
     $scope.addPage = function() {
         console.log($scope.pages);
         var page = $scope.pages[$scope.pages.length - 1];
-        $http.post('/classes/' + user.classID + '/workshops/' + $scope.workshop.id + '/pages?access_token=' + user.token + '&title=' + page.title +  '&content=' + page.content).
+        $http.post('/classes/' + user.classID + '/workshops/' + $scope.workshop.id + '/pages?access_token=' + user.token + '&title=' + page.title +  '&content=' + page.contents).
             then(function(resp) {
                 console.log(resp.data);
                 $scope.pages.push({});
             });
+    }
+
+    $scope.updatePage = function() {
     }
 
 }]);
@@ -333,6 +353,10 @@ app.controller('WorkshopsCtrl', ['$scope', '$http', '$routeParams', 'user', func
                 }
             }
         });
+
+    $scope.view = function(task) {
+        $scope.selected = task;
+    }
 }]);
 
 app.controller('FeedCtrl', ['$scope', '$http', '$routeParams', 'user', function($scope, $http, $routeParams, user) {
