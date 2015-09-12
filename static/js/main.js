@@ -215,7 +215,12 @@ app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routePar
             });
     }
 
-    $scope.updatePage = function() {
+    $scope.updatePage = function(page) {
+        console.log("updating", page);
+        $http.post('/classes/' + user.classID + '/workshops/' + $scope.workshop.id + '/pages/' + page.id + '/edit?access_token=' + user.token + '&contents=' + page.contents + '&title=' + page.title).
+            then(function(resp) {
+                console.log(resp.data);
+            });
     }
 
 }]);
