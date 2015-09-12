@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"errors"
+	"time"
 )
 
 func GetClassByID(id int64) (Class, error) {
@@ -91,4 +92,24 @@ func (c *Class) SetImage(url string) error {
 	_, err := db.Exec("UPDATE classes SET image_url = ? WHERE id = ?", c.Image, c.ID)
 
 	return err
+}
+func (c *Class) Workshop(id int64) (Workshop, error) {
+	w := Workshop{
+		ID: id,
+	}
+
+	var unixTime int64
+
+	row := db.QueryRow("SELECT name, description, explanation, due, class FROM assignments WHERE id = ? AND class = ?", w.ID, c.ID)
+	err := row.Scan(&w.Name, &w.Description, &w.Explanation, &unixTime, &w.Class)
+	if err != nil {
+		return w, err
+	}
+
+	w.Due = time.Unix(0, unixTime)
+	if err != nil {
+		return w, err
+	}
+
+	return w, nil
 }
