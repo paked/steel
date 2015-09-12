@@ -111,6 +111,15 @@ func (w *Workshop) Pages() ([]WorkshopPage, error) {
 	return ps, nil
 }
 
+func (w *Workshop) Page(id int64) (WorkshopPage, error) {
+	p := WorkshopPage{}
+
+	rows := db.QueryRow("SELECT id, workshop, contents, title, created, updated, sequence FROM workshop_pages WHERE workshop = ? AND id = ? ", w.ID, id)
+	err := rows.Scan(&p.ID, &p.Workshop, &p.Contents, &p.Title, &p.Created, &p.Updated, &p.Order)
+
+	return p, err
+}
+
 type WorkshopPage struct {
 	ID       int64  `json:"id"`
 	Workshop int64  `json:"workshop"`
@@ -121,8 +130,8 @@ type WorkshopPage struct {
 	Order    int    `json:"order"`
 }
 
-func (p *WorkshopPage) Edit(contents string) error {
-	_, err := db.Exec("UPDATE workshop_pages SET contents = ? WHERE workshop = ?", contents, p.Workshop)
+func (p *WorkshopPage) Edit(title, contents string) error {
+	_, err := db.Exec("UPDATE workshop_pages SET contents = ?, title = ? WHERE workshop = ? AND id = ?", contents, title, p.Workshop, p.ID)
 	if err != nil {
 		return err
 	}
