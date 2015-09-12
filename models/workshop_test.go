@@ -219,6 +219,11 @@ func TestWorkshopPages(t *testing.T) {
 		t.Error("Could not create page: ", err)
 	}
 
+	err = p.Edit("This is the end.")
+	if err != nil {
+		t.Error("Could not edit page")
+	}
+
 	ps, err = w.Pages()
 	if err != nil {
 		t.Error("Could not get pages", err)

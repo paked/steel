@@ -120,3 +120,14 @@ type WorkshopPage struct {
 	Updated  int64  `json:"updated"`
 	Order    int    `json:"order"`
 }
+
+func (p *WorkshopPage) Edit(contents string) error {
+	_, err := db.Exec("UPDATE workshop_pages SET contents = ? WHERE workshop = ?", contents, p.Workshop)
+	if err != nil {
+		return err
+	}
+
+	p.Contents = contents
+
+	return nil
+}
