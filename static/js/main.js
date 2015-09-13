@@ -212,6 +212,13 @@ app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routePar
             });
     }
 
+    $scope.delete = function() {
+        $http.delete('/classes/' + $routeParams.class_id + '/workshops/'+ $scope.workshop.id +'?access_token=' + user.token).
+            then(function(resp) {
+                $location.path('/classes/' + $routeParams.class_id + '/workshops');
+            });
+    };
+
     $scope.addPage = function() {
         console.log($scope.pages);
         var page = $scope.pages[$scope.pages.length - 1];
