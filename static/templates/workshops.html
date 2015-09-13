@@ -22,7 +22,7 @@
             <div class="panel-heading clearfix">
                 <h3 class="panel-title">{{ selected.name }}
                     <div class="button-group pull-right">
-                        <a ng-href="#/classes/{{user.classID}}/workshops/create/{{ selected.id}}" class="btn btn-primary" style="margin-right: 1vw;">Edit</a>
+                        <a ng-show="student.permission == 1" ng-href="#/classes/{{user.classID}}/workshops/create/{{ selected.id}}" class="btn btn-primary" style="margin-right: 1vw;">Edit</a>
                         <a ng-href="#/classes/{{user.classID}}/workshops/{{ selected.id }}/pages" class="btn btn-primary" style="margin-right: 1vw;">Pages</a>
                     </div>
                 </h3>
