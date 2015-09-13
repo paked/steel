@@ -179,7 +179,13 @@ app.controller('ViewWorkshopCtrl', ['$scope', '$http', '$routeParams', 'user', f
 
 app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routeParams', 'user', function($scope, $http, $location, $routeParams, user) {
     user.setClass($routeParams.class_id);
-    
+
+    $scope.editorOpts = {
+        lineNumbers: true,
+        theme: 'elegant',
+        mode: 'markdown'
+    }
+
     $scope.workshop = {};
     $scope.canCreatePages = false;
     $scope.edit = false;
@@ -232,7 +238,12 @@ app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routePar
 
     $scope.updatePage = function(page) {
         console.log("updating", page);
-        $http.post('/classes/' + user.classID + '/workshops/' + $scope.workshop.id + '/pages/' + page.id + '/edit?access_token=' + user.token + '&contents=' + page.contents + '&title=' + page.title).
+        console.log(page.contents);
+        $http({
+            method: 'POST',
+            url: '/classes/' + user.classID + '/workshops/' + $scope.workshop.id + '/pages/' + page.id + '/edit',
+            params: {access_token: user.token, contents: page.contents, title: page.title}
+        }).
             then(function(resp) {
                 console.log(resp.data);
             });

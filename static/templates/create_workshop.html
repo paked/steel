@@ -17,7 +17,11 @@
 
                     <div class="form-group">
                         <label for="content"> Content</label>
-                        <textarea ng-model="page.contents" id="content"class="form-control"></textarea>
+
+                        <div class="workshop-editor">
+                            <ui-codemirror ng-model="page.contents" id="contents" ui-codemirror-opts="editorOpts"></ui-codemirror>
+                            <!--<textarea id="contents" ng-model="page.contents"></textarea>-->
+                        </div>
                     </div>
                 </div>
 
