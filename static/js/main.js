@@ -182,7 +182,7 @@ app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routePar
 
     $scope.editorOpts = {
         lineNumbers: true,
-        theme: 'elegant',
+        theme: 'ambiance',
         mode: 'markdown'
     }
 
