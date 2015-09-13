@@ -84,6 +84,9 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
             
             $rootScope.$broadcast('user.update');
         },
+        broadcast: function() {
+            $rootScope.$broadcast('user.update');
+        },
         auth: function(method, username, password, email)  {
             var url = '/users/' + method + '?username=' + username + '&password=' + password + '&email=' + email;
             console.log('url: ', url);
@@ -409,6 +412,10 @@ app.controller('FeedCtrl', ['$scope', '$http', '$routeParams', 'user', function(
 }]);
 
 app.controller('HelloCtrl', ['$scope', '$http', 'user', function($scope, $http, user) {
+    user.student = undefined;
+    user.classID = undefined;
+    user.broadcast();
+
     $scope.classes = [];
     $http.get('/classes?access_token=' + user.token)
         .then(function(res) {
