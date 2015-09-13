@@ -70,9 +70,14 @@ func DeleteWorkshopHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token)
 		return
 	}
 
-	_, class, err := getClassFromString(u, vars["class_id"])
+	s, class, err := getClassFromString(u, vars["class_id"])
 	if err != nil {
 		c.Fail("Could not get class info")
+		return
+	}
+
+	if !s.IsAdmin() {
+		c.Error("You are not an admin. You cannot delete this!")
 		return
 	}
 
@@ -107,9 +112,14 @@ func EditPageHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
 		return
 	}
 
-	_, class, err := getClassFromString(u, vars["class_id"])
+	s, class, err := getClassFromString(u, vars["class_id"])
 	if err != nil {
 		c.Fail("Could not get class info")
+		return
+	}
+
+	if !s.IsAdmin() {
+		c.Error("You are not an admin. You cannot edit this!")
 		return
 	}
 
