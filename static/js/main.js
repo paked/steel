@@ -207,7 +207,7 @@ app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routePar
             then(function(resp) {
                 console.log(resp.data);
                 $scope.canCreatePages = true;
-                $scope.pages.push({});
+                $scope.pages.push({created: false});
                 $scope.workshop = resp.data.data;
             });
     }
@@ -218,7 +218,8 @@ app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routePar
         $http.post('/classes/' + user.classID + '/workshops/' + $scope.workshop.id + '/pages?access_token=' + user.token + '&title=' + page.title +  '&content=' + page.contents).
             then(function(resp) {
                 console.log(resp.data);
-                $scope.pages.push({});
+                $scope.pages[$scope.pages.length - 1].created = true;
+                $scope.pages.push({created: false});
             });
     }
 
