@@ -1,15 +1,14 @@
 <div class="row">
     <div class="col-md-4">
-        <div class="list-group">
-            <a ng-repeat="task in tasks" class="list-group-item" ng-class="{active: task.id == selected.id}" ng-click="view(task)">
-                <h4>{{ task.name }}<small class="pull-right">{{ task.time }}</small></h4>
-                <p>{{ task.description }}</p>
-            </a>
-
+        <div class="list-group nav-scroll">
             <a ng-href="#/classes/{{user.classID}}/workshops/create" class="list-group-item list-group-item-info" ng-show="task.length != 0 && student.permission == 1">
                 <h4>Add a new workshop</h4>
             </a>
 
+            <a ng-repeat="task in tasks" class="list-group-item" ng-class="{active: task.id == selected.id}" ng-click="view(task)">
+                <h4>{{ task.name }}<small class="pull-right">{{ task.time }}</small></h4>
+                <p>{{ task.description }}</p>
+            </a>
             <div class="list-group-item disabled" ng-show="tasks.length == 0">
                 <h4>No workshops have been set up</h4>
                 <p>You should either talk to your admin, or <a href="#/classes/{{ user.classID }}/workshops/create">create a new one</a>.</p>

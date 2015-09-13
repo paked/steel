@@ -29,3 +29,9 @@
 .page {
     margin-top: 2rem;
 }
+
+.nav-scroll {
+    max-height: 50rem;
+    overflow-y: scroll;
+    border-bottom: 1px #DDD solid;
+}
