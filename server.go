@@ -44,6 +44,7 @@ func main() {
 	router.HandleFunc("/classes/{class_id}/workshops/{workshop_id}/pages", restrict.R(GetWorkshopPagesHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/workshops/{workshop_id}/pages/{page_id}/edit", restrict.R(EditPageHandler)).Methods("POST")
 	router.HandleFunc("/classes/{class_id}/workshops/{workshop_id}", restrict.R(GetWorkshopHandler)).Methods("GET")
+	router.HandleFunc("/classes/{class_id}/workshops/{workshop_id}", restrict.R(EditWorkshopHandler)).Methods("PUT")
 	router.HandleFunc("/classes/{class_id}/workshops/{workshop_id}", restrict.R(DeleteWorkshopHandler)).Methods("DELETE")
 	router.HandleFunc("/classes/{class_id}/workshops", restrict.R(GetWorkshopsHandler)).Methods("GET")
 	router.HandleFunc("/classes/{class_id}/students", restrict.R(GetStudentHandler)).Methods("GET")
@@ -58,6 +59,49 @@ func main() {
 	models.InitDB(*dbFile)
 
 	http.ListenAndServe("localhost:8080", n)
+}
+
+func EditWorkshopHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
+	c := communicator.New(w)
+	vars := mux.Vars(r)
+
+	u, err := getUserFromToken(t)
+	if err != nil {
+		c.Fail("COuld not get user")
+		return
+	}
+
+	s, class, err := getClassFromString(u, vars["class_id"])
+	if err != nil {
+		c.Fail("Could not get class info")
+		return
+	}
+
+	if !s.IsAdmin() {
+		c.Error("You are not an admin. You cannot delete this!")
+		return
+	}
+
+	wid, err := strconv.ParseInt(vars["workshop_id"], 10, 64)
+	if err != nil {
+		c.Fail("Not a valid workshop id")
+		return
+	}
+
+	work, err := class.Workshop(wid)
+	if err != nil {
+		c.Fail("Could not get workshop")
+		return
+	}
+
+	err = work.Edit(r.FormValue("name"), r.FormValue("description"), r.FormValue("explanation"))
+	if err != nil {
+		fmt.Println(err)
+		c.Fail("Could not edit workshop")
+		return
+	}
+
+	c.OK("Edited")
 }
 
 func DeleteWorkshopHandler(w http.ResponseWriter, r *http.Request, t *jwt.Token) {
