@@ -212,6 +212,7 @@ app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routePar
         $http.post('/classes/' + $routeParams.class_id + '/workshops?access_token=' + user.token + '&name=' + $scope.workshop.name + '&description=' + $scope.workshop.description + '&explanation=' + $scope.workshop.explanation).
             then(function(resp) {
                 console.log(resp.data);
+                $scope.edit = true;
                 $scope.canCreatePages = true;
                 $scope.pages.push({created: false});
                 $scope.workshop = resp.data.data;

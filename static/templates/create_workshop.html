@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
-        <h2>Workshop Pit Stop <button ng-click="delete()" ng-show="student.permission == 1" class="btn btn-danger pull-right">Delete</button></h2>
+        <h2>Workshop Pit Stop <button ng-click="delete()" ng-show="student.permission == 1 && edit" class="btn btn-danger pull-right">Delete</button></h2>
         <label for="name">Name </label><input type="text" class="form-control" ng-model="workshop.name" name="name" id="name">
         <label for="description">Description</label><input type="text" class="form-control" ng-model="workshop.description" name="description" id="description">
         <label for="expanation">Explanation</label><input type="text" class="form-control" ng-model="workshop.explanation" name="explanation" id="explanation">
