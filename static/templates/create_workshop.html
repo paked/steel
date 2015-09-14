@@ -4,9 +4,9 @@
         <label for="name">Name </label><input type="text" class="form-control" ng-model="workshop.name" name="name" id="name">
         <label for="description">Description</label><input type="text" class="form-control" ng-model="workshop.description" name="description" id="description">
         <label for="expanation">Explanation</label><input type="text" class="form-control" ng-model="workshop.explanation" name="explanation" id="explanation">
-        <button ng-show="edit" class="btn btn-default pull-right" ng-click="updateWorkshop()">Update Info</button>
+        <button id="update-info-button" ng-show="edit" class="btn btn-default" ng-click="updateWorkshop()">Update Info</button>
 
-        <br>
+        <hr>
 
         <button ng-show="!edit && pages.length == 0" ng-click="create()" class="btn btn-primary">Add Workshop</button>
         
