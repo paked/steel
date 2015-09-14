@@ -250,6 +250,21 @@ app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routePar
             });
     }
 
+    $scope.updateWorkshop = function() {
+            $http({
+                method: 'PUT',
+                url:'/classes/' + user.classID + '/workshops/' + $scope.workshop.id,
+                params: {access_token: user.token, name: $scope.workshop.name, explanation: $scope.workshop.explanation, description: $scope.workshop.description}
+            }).
+            then(function(resp) {
+                console.log(resp);
+            });
+            /*$http.put('/classes/' + user.classID + '/workshops/' + $scope.workshop.id, {params: {access_token: user.token, name: $scope.workshop.name, explanation: $scope.workshop.explanation, description: $scope.workshop.description}}).
+                then(function(resp) {
+                    console.log(resp);
+                });*/
+    }
+
 }]);
 
 app.controller('AddClassCtrl', ['$scope', '$http', '$location', '$routeParams', 'user', function($scope, $http, $location, $routeParams, user) {

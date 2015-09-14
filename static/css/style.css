@@ -39,3 +39,7 @@
 .workshop-editor {
     border: 1px solid #DDD; 
 }
+
+#update-info-button {
+    margin-top: 1rem;
+}
