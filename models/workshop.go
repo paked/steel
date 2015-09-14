@@ -120,6 +120,19 @@ func (w *Workshop) Page(id int64) (WorkshopPage, error) {
 	return p, err
 }
 
+func (s *Workshop) Edit(name, description, explanation string) error {
+	_, err := db.Exec("UPDATE assignments SET name = ?, description = ?, explanation = ? WHERE id = ?", name, description, explanation, s.ID)
+	if err != nil {
+		return err
+	}
+
+	s.Name = name
+	s.Description = description
+	s.Explanation = explanation
+
+	return nil
+}
+
 type WorkshopPage struct {
 	ID       int64  `json:"id"`
 	Workshop int64  `json:"workshop"`
