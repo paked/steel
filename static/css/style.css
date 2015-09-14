@@ -31,7 +31,7 @@
 }
 
 .nav-scroll {
-    max-height: 50rem;
+    max-height: 50.5rem;
     overflow-y: scroll;
     border-bottom: 1px #DDD solid;
 }
