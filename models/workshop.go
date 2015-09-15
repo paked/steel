@@ -18,7 +18,7 @@ func (a *Workshop) Delete() error {
 	return err
 }
 
-func GetAssignment(id int64) (Workshop, error) {
+func GetWorkshop(id int64) (Workshop, error) {
 	a := Workshop{
 		ID: id,
 	}
