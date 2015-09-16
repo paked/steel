@@ -28,12 +28,16 @@
                 </div>
 
                 <div class="panel-footer">
-                    <button ng-show="(!edit && !page.created) || $last" ng-click="addPage()" class="btn btn-primary">Add Page</button>
+                    <button ng-show="(!edit && !page.created) || $last" ng-click="addPage()" class="btn btn-primary">Save Page</button>
                     
                     <button ng-show="edit || page.created" ng-click="updatePage(page)" class="btn btn-default">Update Page</button>
                 </div>
             </div>
         </div>
+
+        <button ng-show="edit && pages[pages.length] != {}" class="btn btn-primary pull-right" ng-click="tempWorkshop()">Add Page</button>
     </div>
+
+
 </div>
 

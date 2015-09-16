@@ -214,9 +214,12 @@ app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routePar
                 console.log(resp.data);
                 $scope.edit = true;
                 $scope.canCreatePages = true;
-                $scope.pages.push({created: false});
                 $scope.workshop = resp.data.data;
             });
+    }
+
+    $scope.tempWorkshop = function() {
+        $scope.pages.push({created: false});
     }
 
     $scope.delete = function() {
@@ -233,7 +236,6 @@ app.controller('CreateWorkshopCtrl', ['$scope', '$http', '$location', '$routePar
             then(function(resp) {
                 console.log(resp.data);
                 $scope.pages[$scope.pages.length - 1].created = true;
-                $scope.pages.push({created: false});
             });
     }
 
