@@ -34,6 +34,7 @@
     max-height: 50.5rem;
     overflow-y: scroll;
     border-bottom: 1px #DDD solid;
+    border-top: 1px #DDD solid;
 }
 
 .workshop-editor {
