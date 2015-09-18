@@ -1,7 +1,11 @@
 <div class="row">
     <div class="col-md-8">
-        <h3>Greg's Programming School - 30 Students</h3>
+        <h3>{{ user.class.name }}</h3>
+
+        <p>{{ user.class.description }}</p>
+
         <br>
+
         <table class="table">
             <tr ng-repeat="update in feedUpdates" ng-switch="update.type">
                 <td ng-switch-when="assignment"><i class="fa fa-tasks"></i></td>

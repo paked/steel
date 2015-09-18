@@ -141,6 +141,13 @@ app.factory('user', ['$http', '$location', '$rootScope', function($http, $locati
         },
         setClass: function(i) {
             u.classID = i;
+            for (var n = 0; n < u.classes.length; n++) {
+                if (u.classes[n].id == i) {
+                    u.class = u.classes[n];
+                    break;
+                }
+            }
+
             u.currentStudent();
             $rootScope.$broadcast('user.update');
         },
