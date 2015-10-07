@@ -1,0 +1,6 @@
+steel:
+    build: .
+    command: gin -a=8080 -b "steel"
+    working_dir: /go/src/github.com/paked/steel
+    ports:
+        - "80:3000"
